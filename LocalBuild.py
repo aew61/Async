@@ -53,7 +53,8 @@ def downloadBuildScripts():
     with tarfile.open(filePath, "r:gz") as tarFile:
         # extract out scripts and config dirs and move it to currentDir/build
         tarFile.extractall(path=os.path.join(currentDir, "build"),
-                           members=[x for x in tarFile.getmembers() if "LICENSE" not in x.name])
+                           members=[x for x in tarFile.getmembers() if "license" not in x.name.lower()\
+                                    and "readme" not in x.name.lower()])
 
 
 def updateBuildScripts():
@@ -98,6 +99,7 @@ class LocalBuild(ProjectBuild.ProjectBuild):
                              self.runUnitTests,
                              self.package,
                              self.uploadPackagedVersion]
+        self._tests_to_run = ["Async_unit"]
 
     # def generateConfig(self, asyncConfigPath=None, asyncConfigFileName=None):
     #     outIncludeDir = os.path.join(FileSystem.getDirectory(FileSystem.OUT_ROOT),
@@ -150,11 +152,11 @@ class LocalBuild(ProjectBuild.ProjectBuild):
     #                    "} // end of namespace Config\n"
     #                    "} // end of namespace " + self._project_name + "\n")
 
-    # def customSetupWorkspace(self):
-    #     print("Setting up workspaces for project [%s]" % self._project_name)
-    #     self.cleanBuildWorkspace()
-    #     Utilities.mkdir(FileSystem.getDirectory(FileSystem.WORKING, self._config, self._project_name))
-    #     self.loadDependencies(self.parseDependencyFile())
+    def customSetupWorkspace(self):
+        print("Setting up workspaces for project [%s]" % self._project_name)
+        self.cleanBuildWorkspace()
+        Utilities.mkdir(FileSystem.getDirectory(FileSystem.WORKING, self._config, self._project_name))
+        self.loadDependencies(self.parseDependencyFile())
 
     # def customPreBuild(self, asyncConfigPath=None, asyncConfigFileName=None):
     #     self.customSetupWorkspace()
