@@ -1,4 +1,4 @@
-find_path( ASYNC_INCLUDES Async/AsyncExecution.hpp
+find_path( ASYNC_INCLUDES Async/LibraryExport.h
     HINTS
         ${CMAKE_INSTALL_PREFIX}/include
         ${CMAKE_PREFIX_PATH}/include
