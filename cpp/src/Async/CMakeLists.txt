@@ -67,10 +67,11 @@ set( DEPENDENCY_CHECK FALSE )
 
 include( GNUInstallDirs )
 
-# set( ${PROJECT_NAME}_IMPORTED_LIST
-#     # all libraries to import when building Async
-# )
-# include(ProjectLinker)
+set( ${PROJECT_NAME}_IMPORTED_LIST
+    # all libraries to import when building Async
+    "Utilities"
+)
+include(ProjectLinker)
 
 # if( NOT DEPENDENCY_CHECK )
 #     message( SEND_ERROR "Required header files or libraries not found" )
@@ -85,9 +86,9 @@ set( ASYNC_LIB_NAME ${PROJECT_NAME} )
 include( GenerateExportHeader )
 
 add_library( ${ASYNC_LIB_NAME} SHARED ${ASYNC_SRCS} ${ASYNC_PUBLIC_HEADERS} ${ASYNC_PRIVATE_HEADERS})
-# if( ${${PROJECT_NAME}_IMPORTED_LIBS_LENGTH} GREATER 0 )
-#     target_link_libraries( ${ASYNC_LIB_NAME} ${${PROJECT_NAME}_IMPORTED_LIBS} )
-# endif()
+if( ${${PROJECT_NAME}_IMPORTED_LIBS_LENGTH} GREATER 0 )
+    target_link_libraries( ${ASYNC_LIB_NAME} ${${PROJECT_NAME}_IMPORTED_LIBS} )
+endif()
 
 set_target_properties( ${ASYNC_LIB_NAME} PROPERTIES
     PUBLIC_HEADER       "${ASYNC_PUBLIC_HEADERS}"

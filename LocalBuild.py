@@ -75,6 +75,8 @@ def updateBuildScripts():
                           mostRecentBuildScriptsRecord["patch"],
                           mostRecentBuildScriptsRecord["build_num"]]
     print("Most recent BuildScripts version: %s" % mostRecentBuildNum)
+    if len(os.listdir(os.path.join(buildScriptsDir, "downloads"))) == 0:
+        return True
     currentFile = max(os.listdir(os.path.join(buildScriptsDir, "downloads")))
     currentBuild = [int(x) for x in currentFile.split("_")[1].split(".")]
     print("Currently have BuildScripts version: %s" % currentBuild)
