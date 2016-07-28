@@ -35,6 +35,7 @@ if( RUN_UNIT_TESTS )
     set( ${PROJECT_NAME}_IMPORTED_LIST
         # all libraries to import when building Async
         "gtest"
+        "Utilities"
     )
     include(ProjectLinker)
 
