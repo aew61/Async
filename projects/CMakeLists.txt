@@ -50,7 +50,7 @@ if( RUN_UNIT_TESTS )
 
     if( BUILD_ASYNC )
         # Async unit tests
-        add_subdirectory( ${SRC_ROOT}/unitTest/Async
+        add_subdirectory( ${SRC_ROOT}/unitTest/Async/src
                           ${OUT_ROOT}/AsyncUnit )
     endif()
 

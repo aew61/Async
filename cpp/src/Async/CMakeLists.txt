@@ -35,7 +35,7 @@ get_filename_component( CONFIG_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../build/o
 
 # Source files
 set( ASYNC_SRCS
-    ${SRC_ROOT}/AddInts.cpp
+    ${SRC_ROOT}/AddInts.cc
 )
 
 # Public header files (installed together with libraries)

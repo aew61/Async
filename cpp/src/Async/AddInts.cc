@@ -1,5 +1,5 @@
 // SYSTEM INCLUDES
-#include <Utilities/AddInts.h>
+#include <Utilities/Semaphore.h>
 
 // C++ PROJECT INCLUDES
 #include "Async/AddInts.h"
@@ -9,7 +9,8 @@ namespace Async
 
     int AddInts(int a, int b)
     {
-        return Utilities::AddInts(a, b);
+        Utilities::Semaphore sem(1);
+        return a + b;
     }
 
 } // end of namespace Async
