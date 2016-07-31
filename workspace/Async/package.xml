@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package>
+    <name>Async</name>
+    <description>Asynchronous executions framework</description>
+    <maintainer>Andrew Wood</maintainer>
+    <email>aew61@case.edu</email>
+
+    <robos_package_dependency>gtest</robos_package_dependency>
+    <robos_package_dependency>Utilities</robos_package_dependency>
+</package>
