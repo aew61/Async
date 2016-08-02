@@ -25,24 +25,24 @@ else()
     )
 endif()
 
+set( ASYNC_FOUND FALSE )
+
 # make library target
-if( NOT TARGET ASYNC_LIB )
-    add_library( ASYNC_LIB SHARED IMPORTED )
+add_library( ASYNC_LIB SHARED IMPORTED )
 
-    # will set .so for unix systems and .dll for windows
+# will set .so for unix systems and .dll for windows
+set_property( TARGET ASYNC_LIB PROPERTY
+    IMPORTED_LOCATION ${ASYNC_SHARED_LIB} )
+
+# need to link to .lib files for windows
+if( ${CMAKE_SYSTEM_NAME} MATCHES "Windows" )
     set_property( TARGET ASYNC_LIB PROPERTY
-        IMPORTED_LOCATION ${ASYNC_SHARED_LIB} )
-
-    # need to link to .lib files for windows
-    if( ${CMAKE_SYSTEM_NAME} MATCHES "Windows" )
-        set_property( TARGET ASYNC_LIB PROPERTY
-            IMPORTED_IMPLIB ${ASYNC_LIB_IMPL} )
-    endif( ${CMAKE_SYSTEM_NAME} MATCHES "Windows" )
-endif()
-
-if( ASYNC_INCLUDES AND ASYNC_LIB )
-    set( ASYNC_FOUND TRUE )
+        IMPORTED_IMPLIB ${ASYNC_LIB_IMPL} )
+    if( ASYNC_INCLUDES AND ASYNC_SHARED_LIB AND ASYNC_LIB_IMPL )
+        set( ASYNC_FOUND TRUE )
+    endif()
 else()
-    # set( ASYNC_SHARED_LIB ${ASYNC_SHARED_LIB}/Async.dll )
-    set( ASYNC_FOUND FALSE )
-endif()
+    if( ASYNC_INCLUDES AND ASYNC_SHARED_LIB )
+        set( ASYNC_FOUND TRUE )
+    endif()
+endif( ${CMAKE_SYSTEM_NAME} MATCHES "Windows" )
