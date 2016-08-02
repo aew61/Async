@@ -57,6 +57,8 @@ set( INCLUDE_DIRS
     ${CONFIG_ROOT}
 )
 
+include_directories( ${INCLUDE_DIRS} )
+
 set( ASYNC_COMPILE_DEFINITIONS )
 
 # check required libraries and header files and such.
@@ -112,7 +114,8 @@ if( RUN_UNIT_TESTS )
         ${TEST_INC_ROOT}
         ${CONFIG_ROOT}
     )
-    
+
+    include_directories( ${INCLUDE_DIRS} )
     rbuild_add_gtest( ${PROJECT_NAME}_unit
         "${ASYNC_UNIT_SOURCES}"
         "${ASYNC_UNIT_HEADERS}"
