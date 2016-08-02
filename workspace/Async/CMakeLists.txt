@@ -82,7 +82,6 @@ rbuild_add_shared_library( ${PROJECT_NAME}
     "${ASYNC_PRIVATE_HEADERS}"
     "${ASYNC_COMPILE_DEFINITIONS}"
     "${${PROJECT_NAME}_IMPORTED_LIST}"
-    "${INCLUDE_DIRS}"
 )
 
 if( RUN_UNIT_TESTS )
@@ -118,7 +117,6 @@ if( RUN_UNIT_TESTS )
         "${ASYNC_UNIT_SOURCES}"
         "${ASYNC_UNIT_HEADERS}"
         "${${PROJECT_NAME}_unit_IMPORTED_LIST}"
-        "${INCLUDE_DIRS}"
     )
     if( TARGET ${PROJECT_NAME}_unit )
         target_link_libraries( ${PROJECT_NAME}_unit ${PROJECT_NAME} )
