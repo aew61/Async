@@ -63,6 +63,7 @@ namespace Tests
             delete testVector[i];
         }
         testCollector.Join();
+        testVector.clear();
     }
 
     void CreateChain(std::vector<DynamicQueueableWorkItemTestChild*>* pVec,
@@ -103,6 +104,7 @@ namespace Tests
             delete testVector[i];
         }
         testCollector.Join();
+        testVector.clear();
     }
 
 } // end of namespace Tests
