@@ -130,13 +130,13 @@ if( RUN_UNIT_TESTS )
         ${TEST_SRC_ROOT}/QueueableWorkItemTestChild.cc
         ${TEST_SRC_ROOT}/DynamicQueueableWorkItemTestChild.cc
         ${TEST_SRC_ROOT}/GarbageCollector_noDealloc.cc
-        # ${TEST_SRC_ROOT}/Result_unit.cc
+        ${TEST_SRC_ROOT}/Result_unit.cc
         # ${TEST_SRC_ROOT}/WorkItemStates_unit.cc
         # ${TEST_SRC_ROOT}/WorkItem_unit.cc
         # ${TEST_SRC_ROOT}/WorkerThread_Solo_unit.cc
         # ${TEST_SRC_ROOT}/GarbageCollector_Solo_unit.cc
         # ${TEST_SRC_ROOT}/QueueableWorkItem_Solo_unit.cc
-        ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_unit.cc
+        # ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_unit.cc
         # ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_GarbageCollector_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
