@@ -24,13 +24,13 @@ namespace Tests
         Concurrency::WorkerThread wThread(&testCollector);
 
         // queue work item
-        EXPECT_EQ(false, test.GetVal());
+        EXPECT_FALSE(test.GetVal());
         EXPECT_EQ(Types::Result_t::SUCCESS, wThread.Queue(&test));
 
         // cleanup
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
         wThread.Join();
-        EXPECT_EQ(true, test.GetVal());
+        EXPECT_TRUE(test.GetVal());
         testCollector.Join();
     }
 
@@ -44,7 +44,7 @@ namespace Tests
         for(int i = 0; i < numWorkItems; ++i)
         {
             QueueableWorkItemTestChild* pChild = new QueueableWorkItemTestChild();
-            EXPECT_EQ(false, pChild->GetVal());
+            EXPECT_FALSE(pChild->GetVal());
             testVector.push_back(pChild);
         }
 
@@ -58,7 +58,7 @@ namespace Tests
 
         for(int i = 0; i < numWorkItems; ++i)
         {
-            EXPECT_EQ(true, testVector[i]->GetVal());
+            EXPECT_TRUE(testVector[i]->GetVal());
             EXPECT_EQ(0, testVector[i]->GetRefCount());
             delete testVector[i];
         }
@@ -98,7 +98,7 @@ namespace Tests
         EXPECT_EQ(numWorkItems, testVector.size());
         for(int i = 0; i < testVector.size(); ++i)
         {
-            EXPECT_EQ(true, testVector[i]->GetVal());
+            EXPECT_TRUE(testVector[i]->GetVal());
             EXPECT_EQ(0, testVector[i]->GetRefCount());
             delete testVector[i];
         }
