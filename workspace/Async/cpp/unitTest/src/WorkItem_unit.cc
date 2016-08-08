@@ -125,7 +125,7 @@ namespace Tests
         {
             std::rethrow_exception(wTest.GetException());
         }
-        catch(std::exception e)
+        catch(std::logic_error e)
         {
             std::string expectedErrorMsg = "Main Error";
             std::string actualErrorMsg = e.what();
@@ -156,7 +156,7 @@ namespace Tests
         {
             std::rethrow_exception(wTest.GetException());
         }
-        catch(std::exception e)
+        catch(std::logic_error e)
         {
             std::string expectedErrorMsg = "Cleanup Error";
             std::string actualErrorMsg = e.what();
