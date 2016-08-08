@@ -1,6 +1,7 @@
 // SYSTEM INCLUDES
 #include <chrono>
 #include <functional>
+#include <memory>
 #include <thread>
 #include <vector>
 #include <gtest/gtest.h>
@@ -37,13 +38,13 @@ namespace Tests
     TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Sequential)
     {
         int numWorkItems = 15;
-        std::vector<QueueableWorkItemTestChild*> testVector;
+        std::vector<std::shared_ptr<QueueableWorkItemTestChild> > testVector;
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
         for(int i = 0; i < numWorkItems; ++i)
         {
-            QueueableWorkItemTestChild* pChild = new QueueableWorkItemTestChild();
+            std::shared_ptr<QueueableWorkItemTestChild> pChild = std::make_shared<QueueableWorkItemTestChild>();
             EXPECT_FALSE(pChild->GetVal());
             testVector.push_back(pChild);
         }
@@ -51,7 +52,7 @@ namespace Tests
         // add all the children to the WorkerThread
         for(int i = 0; i < numWorkItems; ++i)
         {
-            EXPECT_EQ(Types::Result_t::SUCCESS, wThread.Queue(testVector[i]));
+            EXPECT_EQ(Types::Result_t::SUCCESS, wThread.Queue(testVector[i].get()));
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(15));
         wThread.Join();
@@ -60,20 +61,19 @@ namespace Tests
         {
             EXPECT_TRUE(testVector[i]->GetVal());
             EXPECT_EQ(0, testVector[i]->GetRefCount());
-            delete testVector[i];
         }
         testCollector.Join();
         testVector.clear();
     }
 
-    void CreateChain(std::vector<DynamicQueueableWorkItemTestChild*>* pVec,
+    void CreateChain(std::vector<std::shared_ptr<DynamicQueueableWorkItemTestChild> >* pVec,
                                                   Concurrency::WorkerThread* pThread,
                                                   int numWorkItemSoFar, int maxWorkItems)
     {
         if(numWorkItemSoFar < maxWorkItems)
         {
-            DynamicQueueableWorkItemTestChild* pTestChild =
-                new DynamicQueueableWorkItemTestChild(
+            std::shared_ptr<DynamicQueueableWorkItemTestChild> pTestChild =
+                std::make_shared<DynamicQueueableWorkItemTestChild>(
                     [pVec, pThread, numWorkItemSoFar, maxWorkItems]() -> void
                     {
                         std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -81,14 +81,14 @@ namespace Tests
                     }
                 );
             pVec->push_back(pTestChild);
-            EXPECT_EQ(Types::Result_t::SUCCESS, pThread->Queue(pTestChild));
+            EXPECT_EQ(Types::Result_t::SUCCESS, pThread->Queue(pTestChild.get()));
         }
     }
 
     TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Interleaved)
     {
         int numWorkItems = 15;
-        std::vector<DynamicQueueableWorkItemTestChild*> testVector;
+        std::vector<std::shared_ptr<DynamicQueueableWorkItemTestChild> > testVector;
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
@@ -101,7 +101,6 @@ namespace Tests
         {
             EXPECT_TRUE(testVector[i]->GetVal());
             EXPECT_EQ(0, testVector[i]->GetRefCount());
-            delete testVector[i];
         }
         testCollector.Join();
         testVector.clear();
