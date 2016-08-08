@@ -30,13 +30,13 @@ namespace Async
     template<typename T>
     ASYNC_API T* COPY(T*& pWorkItem)
     {
-        return std::dynamic_cast<T*>(std::dynamic_cast<QueueableWorkItem*>(RefCounter::IncRef(pWorkItem)));
+        return dynamic_cast<T*>(dynamic_cast<QueueableWorkItem*>(RefCounter::IncRef(pWorkItem)));
     }
 
     template<typename T>
     ASYNC_API void DECREF(T*& pWorkItem)
     {
-        RefCounter::DecRef(std::dynamic_cast<QueueableWorkItem*>(pWorkItem));
+        RefCounter::DecRef(dynamic_cast<QueueableWorkItem*>(pWorkItem));
         pWorkItem = nullptr;
     }
 
