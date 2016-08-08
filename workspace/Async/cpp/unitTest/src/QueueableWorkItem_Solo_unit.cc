@@ -15,7 +15,7 @@ namespace Tests
 
         EXPECT_NE(nullptr, &test);
         EXPECT_EQ(1, test.GetRefCount());
-        EXPECT_EQ(false, test.GetVal());
+        EXPECT_FALSE(test.GetVal());
     }
 
     TEST(Async_QueueableWorkItem_unit, Test_Child_Execute)
@@ -23,7 +23,7 @@ namespace Tests
         QueueableWorkItemTestChild test;
 
         test.ExecuteInterface();
-        EXPECT_EQ(true, test.GetVal());
+        EXPECT_TRUE(test.GetVal());
     }
 
 } // end of namespace Tests
