@@ -10,6 +10,7 @@ namespace Async
     GarbageCollector::GarbageCollector() : _thread(), _threadCV(),
         _run(true), _queueMutex(), _queue()
     {
+        this->_thread = std::thread(&GarbageCollector::Run, this);
     }
 
     GarbageCollector::~GarbageCollector()
