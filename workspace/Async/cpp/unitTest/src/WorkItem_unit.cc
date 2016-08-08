@@ -16,37 +16,14 @@ namespace Tests
 
     TEST(Async_WorkItem_unit, Test_Constructor)
     {
-        WorkItem workItem(0);
+        WorkItem workItem;
         EXPECT_NE(nullptr, &workItem);
-    }
-
-    TEST(Async_WorkItem_unit, Test_Get_And_Set_Id)
-    {
-        WorkItem workItem(0);
-
-        EXPECT_EQ(0, workItem.GetId());
-
-        workItem.SetId(15);
-
-        EXPECT_EQ(15, workItem.GetId());
-
-        WorkItem workItem2;
-        EXPECT_EQ(0, workItem2.GetId());
-    }
-
-    TEST(Async_WorkItem_unit, Test_Queue_With_No_WorkerThread)
-    {
-        Types::Result_t result = Types::Result_t::FAILURE;
-
-        WorkItem workItem(0);
-
-        EXPECT_EQ(result, workItem.Queue(nullptr));
     }
 
     TEST(Async_WorkItem_unit, Test_GetException)
     {
         // default value
-        WorkItem workItem(0);
+        WorkItem workItem;
         EXPECT_EQ(nullptr, workItem.GetException());
 
         WorkItemTestChild wTest;
@@ -69,7 +46,7 @@ namespace Tests
     TEST(Async_WorkItem_unit, Test_GetStateAsString)
     {
         // default value
-        WorkItem workItem(0);
+        WorkItem workItem;
         std::string defaultState = "Idle";
         EXPECT_EQ(defaultState, workItem.GetStateAsString());
 
@@ -78,6 +55,16 @@ namespace Tests
         wTest.SetState(state);
         EXPECT_EQ(state, wTest.GetState());
         EXPECT_EQ("Done", wTest.GetStateAsString());
+    }
+
+    TEST(Async_WorkItem_unit, Test_Get_And_Set_State)
+    {
+        WorkItemTestChild wTest;
+        // default value
+        EXPECT_EQ(States::WorkItemState::IDLE, wTest.GetState());
+
+        wTest.SetState(States::WorkItemState::DONE);
+        EXPECT_EQ(States::WorkItemState::DONE, wTest.GetState());
     }
 
     TEST(Async_WorkItem_unit, Test_AttachMainFunction_And_Execute)

@@ -17,18 +17,11 @@ namespace Async
     class WorkItem : public IExecutableWorkItem
     {
         friend class PromiseBaseImpl;
-        friend class GarbageCollector;
     public:
 
-        WorkItem(uint64_t id=0);
+        WorkItem();
 
         ~WorkItem();
-
-        virtual void SetId(const uint64_t) override;
-
-        virtual const uint64_t GetId() override;
-
-        virtual Types::Result_t Queue(Concurrency::WorkerThread* pThread) override;
 
         virtual std::exception_ptr GetException() const override;
 
@@ -50,8 +43,6 @@ namespace Async
 
         void SetState(States::WorkItemState newState);
 
-        virtual void DecRef() override;
-
     private:
 
         FunctionPtr GetCleanupFunction();
@@ -60,8 +51,6 @@ namespace Async
 
     private:
 
-        uint64_t                    _id;
-        Concurrency::WorkerThread*  _pThread;
         FunctionPtr                 _pMainFunction;
         FunctionPtr                 _pCleanupFunction;
         std::exception_ptr          _pException;

@@ -39,6 +39,8 @@ set( ASYNC_SRCS
     ${SRC_ROOT}/WorkItemStates.cc
     ${SRC_ROOT}/ConcurrencyStates.cc
     ${SRC_ROOT}/WorkItem.cc
+    ${SRC_ROOT}/QueueableWorkItem.cc
+    ${SRC_ROOT}/ExternalRefCount.cc
     ${SRC_ROOT}/WorkerThread.cc
     ${SRC_ROOT}/GarbageCollector.cc
 )
@@ -50,6 +52,7 @@ set( ASYNC_PUBLIC_HEADERS
     ${INC_ROOT}/Async/WorkItemStates.h
     ${INC_ROOT}/Async/ConcurrencyStates.h
     ${INC_ROOT}/Async/IExecutableWorkItem.h
+    ${INC_ROOT}/Async/QueueableWorkItem.h
     ${INC_ROOT}/Async/IThread.h
     ${INC_ROOT}/Async/IGarbageCollector.h
     ${INC_ROOT}/Async/ExternalRefCount.h
@@ -119,16 +122,30 @@ if( RUN_UNIT_TESTS )
         ${SRC_ROOT}/WorkItemStates.cc
         ${SRC_ROOT}/ConcurrencyStates.cc
         ${SRC_ROOT}/WorkItem.cc
+        ${SRC_ROOT}/QueueableWorkItem.cc
         ${SRC_ROOT}/WorkerThread.cc
         ${SRC_ROOT}/GarbageCollector.cc
 
         ${TEST_SRC_ROOT}/WorkItemTestChild.cc
+        ${TEST_SRC_ROOT}/QueueableWorkItemTestChild.cc
+        ${TEST_SRC_ROOT}/DynamicQueueableWorkItemTestChild.cc
+        ${TEST_SRC_ROOT}/GarbageCollector_noDealloc.cc
+        ${TEST_SRC_ROOT}/Result_unit.cc
+        ${TEST_SRC_ROOT}/WorkItemStates_unit.cc
         ${TEST_SRC_ROOT}/WorkItem_unit.cc
+        ${TEST_SRC_ROOT}/WorkerThread_Solo_unit.cc
+        ${TEST_SRC_ROOT}/GarbageCollector_Solo_unit.cc
+        ${TEST_SRC_ROOT}/QueueableWorkItem_Solo_unit.cc
+        ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_unit.cc
+        ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_GarbageCollector_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
 
     set( ASYNC_UNIT_HEADERS
         ${TEST_INC_ROOT}/WorkItemTestChild.h
+        ${TEST_INC_ROOT}/QueueableWorkItemTestChild.h
+        ${TEST_INC_ROOT}/DynamicQueueableWorkItemTestChild.h
+        ${TEST_INC_ROOT}/GarbageCollector_noDealloc.h
     )
 
     # directories to search for header files

@@ -20,11 +20,11 @@ namespace Async
 		case States::WorkItemState::EXECUTING_MAIN_FUNCTION:
 			return "Executing Main Function";
 		case States::WorkItemState::EXECUTING_CLEANUP_FUNCTION:
-			return "Executing Posterior Function";
+			return "Executing Cleanup Function";
         case States::WorkItemState::QUEUE:
             return "Queue";
 		case States::WorkItemState::REQUEUE:
-			return "ReQueue";
+			return "Requeue";
 		}
 		throw std::logic_error("Unexpected WorkItem State");
 	}

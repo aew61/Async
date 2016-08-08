@@ -9,10 +9,11 @@ namespace Async
 namespace Concurrency
 {
 
-    WorkerThread::WorkerThread() : _thread(), _threadCV(),
+    WorkerThread::WorkerThread(IGarbageCollector* pIGC) : _thread(), _threadCV(),
         _state(States::ConcurrencyState::IDLE), _run(true),
-        _queueMutex(), _queue()
+        _queueMutex(), _queue(), _pIGC(pIGC)
     {
+        this->_thread = std::thread(&WorkerThread::Run, this);
     }
 
     WorkerThread::~WorkerThread()
@@ -33,7 +34,8 @@ namespace Concurrency
         return this->_state;
     }
 
-    Types::Result_t WorkerThread::Queue(IExecutableWorkItem* pWorkItem)
+    // Types::Result_t WorkerThread::Queue(IExecutableWorkItem* pWorkItem)
+    Types::Result_t WorkerThread::Queue(QueueableWorkItem* pWorkItem)
     {
         // modifying queue so need to aquire lock on it
         std::unique_lock<std::mutex> queueLock(this->_queueMutex);
@@ -74,12 +76,14 @@ namespace Concurrency
             this->_thread.join();
         }
         this->_state = States::ConcurrencyState::DONE;
-        IExecutableWorkItem* pWorkItem = nullptr;
-        while(this->_queue.empty())
+        // IExecutableWorkItem* pWorkItem = nullptr;
+        QueueableWorkItem* pWorkItem = nullptr;
+        while(!this->_queue.empty())
         {
             pWorkItem = this->_queue.front();
             this->_queue.pop();
-            pWorkItem->DecRef();
+            // garbage collect pWorkItem
+            this->_pIGC->Queue(pWorkItem);
         }
         pWorkItem = nullptr;
         // std::cout << "WorkerThread shut down" << std::endl;
@@ -93,7 +97,8 @@ namespace Concurrency
     void WorkerThread::Run()
     {
         // the work item we will be executing
-        IExecutableWorkItem* pWorkItem = nullptr;
+        // IExecutableWorkItem* pWorkItem = nullptr;
+        QueueableWorkItem* pWorkItem = nullptr;
 
         while (this->_run)
         {
@@ -124,7 +129,11 @@ namespace Concurrency
                 }
                 else
                 {
-                    pWorkItem->DecRef();
+                    if(pWorkItem->DecRef() == 0)
+                    {
+                        // garbage collect pWorkItem
+                        this->_pIGC->Queue(pWorkItem);
+                    }
                 }
             }
             this->_state = States::ConcurrencyState::IDLE;

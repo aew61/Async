@@ -26,9 +26,8 @@ namespace Async
 
         virtual std::thread::id GetId() override;
 
-        virtual void Queue(IExecutableWorkItem* pWorkItem) override;
-
-        virtual void Stop() override;
+        // virtual void Queue(IExecutableWorkItem* pWorkItem) override;
+        virtual void Queue(QueueableWorkItem* pWorkItem) override;
 
         virtual void Join() override;
 
@@ -44,7 +43,8 @@ namespace Async
         std::condition_variable                     _threadCV;
         std::atomic<bool>                           _run;
         std::mutex                                  _queueMutex;
-        std::queue<IExecutableWorkItem*>            _queue;
+        // std::queue<IExecutableWorkItem*>            _queue;
+        std::queue<QueueableWorkItem*>   _queue;
 
     };
 

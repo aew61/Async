@@ -7,7 +7,8 @@
 
 // C++ PROJECT INCLUDES
 // #include "Async/LibraryExport.h"
-#include "Async/IExecutableWorkItem.h"
+// #include "Async/IExecutableWorkItem.h"
+#include "Async/QueueableWorkItem.h"
 
 namespace Async
 {
@@ -20,11 +21,8 @@ namespace Async
 
         virtual std::thread::id GetId() = 0;
 
-        virtual void Queue(IExecutableWorkItem* pWorkItem) = 0;
-
-        virtual void Attach(IExecutableWorkItem* pWorkItem) = 0;
-
-        virtual void Stop() = 0;
+        // virtual void Queue(IExecutableWorkItem* pWorkItem) = 0;
+        virtual void Queue(QueueableWorkItem* pWorkItem) = 0;
 
         virtual void Join() = 0;
 

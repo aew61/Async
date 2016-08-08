@@ -18,7 +18,7 @@ namespace Tests
     {
     public:
 
-        WorkItemTestChild(uint64_t id=0);
+        WorkItemTestChild();
 
         ~WorkItemTestChild();
 

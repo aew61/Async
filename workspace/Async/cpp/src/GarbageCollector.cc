@@ -25,7 +25,8 @@ namespace Async
         return this->_thread.get_id();
     }
 
-    void GarbageCollector::Queue(IExecutableWorkItem* pWorkItem)
+    // void GarbageCollector::Queue(IExecutableWorkItem* pWorkItem)
+    void GarbageCollector::Queue(QueueableWorkItem* pWorkItem)
     {
         // modifying queue so need to aquire lock on it
         std::unique_lock<std::mutex> queueLock(this->_queueMutex);
@@ -34,11 +35,6 @@ namespace Async
         // wake up the spawned thread if it is sleeping.
         this->_threadCV.notify_one();
         queueLock.unlock();
-    }
-
-    void GarbageCollector::Stop()
-    {
-        this->_run = false;
     }
 
     void GarbageCollector::Join()
@@ -74,7 +70,8 @@ namespace Async
     void GarbageCollector::Run()
     {
         // the work item we will be executing
-        IExecutableWorkItem* pWorkItem = nullptr;
+        // IExecutableWorkItem* pWorkItem = nullptr;
+        QueueableWorkItem* pWorkItem = nullptr;
 
         while (this->_run)
         {

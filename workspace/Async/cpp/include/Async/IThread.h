@@ -9,7 +9,8 @@
 // #include "Async/LibraryExport.h"
 #include "Async/Result.h"
 #include "Async/ConcurrencyStates.h"
-#include "Async/IExecutableWorkItem.h"
+// #include "Async/IExecutableWorkItem.h"
+#include "Async/QueueableWorkItem.h"
 
 namespace Async
 {
@@ -26,7 +27,8 @@ namespace Concurrency
 
         virtual States::ConcurrencyState GetState() = 0;
 
-        virtual Types::Result_t Queue(IExecutableWorkItem* pWorkItem) = 0;
+        // virtual Types::Result_t Queue(IExecutableWorkItem* pWorkItem) = 0;
+        virtual Types::Result_t Queue(QueueableWorkItem* pWorkItem) = 0;
 
         virtual void Stop() = 0;
 

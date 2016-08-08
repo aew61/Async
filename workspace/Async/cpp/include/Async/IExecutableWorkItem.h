@@ -14,27 +14,21 @@
 namespace Async
 {
 
-namespace Concurrency
-{
-    class WorkerThread;
-}
+// namespace Concurrency
+// {
+//     class WorkerThread;
+// }
 
     using FunctionPtr = std::function<States::WorkItemState()>;
 
     class ASYNC_API IExecutableWorkItem
     {
-        friend class Concurrency::WorkerThread;
+        // friend class Concurrency::WorkerThread;
     public:
 
         virtual ~IExecutableWorkItem() = default;
 
         virtual std::exception_ptr GetException() const = 0;
-
-        virtual void SetId(const uint64_t id) = 0;
-
-        virtual const uint64_t GetId() = 0;
-
-        virtual Types::Result_t Queue(Concurrency::WorkerThread* pThread) = 0;
 
     protected:
 
@@ -43,8 +37,6 @@ namespace Concurrency
         virtual void AttachMainFunction(FunctionPtr pFunc) = 0;
 
         virtual void AttachCleanupFunction(FunctionPtr pFunc) = 0;
-
-        virtual void DecRef() = 0;
 
     private:
 

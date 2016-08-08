@@ -11,6 +11,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/IThread.h"
+#include "Async/IGarbageCollector.h"
 
 namespace Async
 {
@@ -21,7 +22,7 @@ namespace Concurrency
     {
     public:
 
-        WorkerThread();
+        WorkerThread(IGarbageCollector* pIGC);
 
         ~WorkerThread();
 
@@ -29,7 +30,8 @@ namespace Concurrency
 
         virtual States::ConcurrencyState GetState() override;
 
-        virtual Types::Result_t Queue(IExecutableWorkItem* pWorkItem) override;
+        // virtual Types::Result_t Queue(IExecutableWorkItem* pWorkItem) override;
+        virtual Types::Result_t Queue(QueueableWorkItem* pWorkItem) override;
 
         virtual void Stop() override;
 
@@ -48,7 +50,9 @@ namespace Concurrency
         std::atomic<States::ConcurrencyState>   _state;
         std::atomic<bool>                       _run;
         std::mutex                              _queueMutex;
-        std::queue<IExecutableWorkItem*>        _queue;
+        // std::queue<IExecutableWorkItem*>        _queue;
+        std::queue<QueueableWorkItem*>          _queue;
+        IGarbageCollector*                _pIGC;
 
     };
 

@@ -9,7 +9,7 @@ namespace Async
 namespace Tests
 {
 
-    WorkItemTestChild::WorkItemTestChild(uint64_t id) : WorkItem(id)
+    WorkItemTestChild::WorkItemTestChild() : WorkItem()
     {
     }
 
