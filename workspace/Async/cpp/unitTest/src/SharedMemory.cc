@@ -9,15 +9,13 @@ namespace Async
 namespace Tests
 {
 
-    SharedMemory::SharedMemory() : _vec(), _mutex(), _count(0),
-        _gc(), _wc(&this->_gc)
+    SharedMemory::SharedMemory(Concurrency::WorkerThread* pWT) :
+        _vec(), _mutex(), _count(0), _pWT(pWT)
     {
     }
 
     SharedMemory::~SharedMemory()
     {
-        this->_wc.Join();
-        this->_gc.Join();
     }
 
 } // end of namespace Tests
