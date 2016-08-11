@@ -101,7 +101,9 @@ namespace Tests
     TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Multiple_MultiThreaded)
     {
         int numThreads = 15;
-        SharedMemory shared;
+        GarbageCollector gc;
+        Concurrency::WorkerThread wt(&gc);
+        SharedMemory shared(&wt);
         std::vector<std::thread> threads(numThreads);
 
         for(int i = 0; i < numThreads; ++i)
@@ -119,10 +121,8 @@ namespace Tests
         }
         EXPECT_EQ(numThreads, threads.size());
         EXPECT_EQ(numThreads, shared._vec.size());
-        for(int i = 0; i < shared._vec.size(); ++i)
-        {
-            EXPECT_TRUE(shared._vec[i]->GetVal());
-        }
+        wt.Join();
+        gc.Join();
         EXPECT_EQ(numThreads, shared._count);
     }
 

@@ -41,7 +41,7 @@ namespace Tests
                 *pInt = *pInt + 1;
             });
         pShared->_vec.push_back(pChild);
-        pShared->_wc.Queue(pChild);
+        pShared->_pWT->Queue(pChild);
     }
 
 } // end of namespac Tests

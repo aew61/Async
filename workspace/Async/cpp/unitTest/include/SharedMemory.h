@@ -18,15 +18,14 @@ namespace Tests
 
     struct SharedMemory
     {
-        SharedMemory();
+        SharedMemory(Concurrency::WorkerThread* pWT);
 
         ~SharedMemory();
 
         std::vector<DynamicQueueableWorkItemTestChild*> _vec;
         std::mutex                                      _mutex;
         int                                             _count;
-        GarbageCollector                                _gc;
-        Concurrency::WorkerThread                       _wc;
+        Concurrency::WorkerThread*                      _pWT;
     };
 
 } // end of namespace Tests
