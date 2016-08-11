@@ -130,6 +130,9 @@ if( RUN_UNIT_TESTS )
         ${TEST_SRC_ROOT}/QueueableWorkItemTestChild.cc
         ${TEST_SRC_ROOT}/DynamicQueueableWorkItemTestChild.cc
         ${TEST_SRC_ROOT}/GarbageCollector_noDealloc.cc
+        ${TEST_SRC_ROOT}/SharedMemory.cc
+        ${TEST_SRC_ROOT}/UnitTest_Utils.cc
+
         ${TEST_SRC_ROOT}/Result_unit.cc
         ${TEST_SRC_ROOT}/WorkItemStates_unit.cc
         ${TEST_SRC_ROOT}/WorkItem_unit.cc
@@ -146,6 +149,8 @@ if( RUN_UNIT_TESTS )
         ${TEST_INC_ROOT}/QueueableWorkItemTestChild.h
         ${TEST_INC_ROOT}/DynamicQueueableWorkItemTestChild.h
         ${TEST_INC_ROOT}/GarbageCollector_noDealloc.h
+        ${TEST_INC_ROOT}/SharedMemory.h
+        ${TEST_INC_ROOT}/UnitTest_Utils.h
     )
 
     # directories to search for header files

@@ -11,6 +11,7 @@
 #include "QueueableWorkItemTestChild.h"
 #include "DynamicQueueableWorkItemTestChild.h"
 #include "GarbageCollector_noDealloc.h"
+#include "UnitTest_Utils.h"
 
 namespace Async
 {
@@ -66,25 +67,6 @@ namespace Tests
         testVector.clear();
     }
 
-    void CreateChain(std::vector<DynamicQueueableWorkItemTestChild*>* pVec,
-                                                  Concurrency::WorkerThread* pThread,
-                                                  int numWorkItemSoFar, int maxWorkItems)
-    {
-        if(numWorkItemSoFar < maxWorkItems)
-        {
-            DynamicQueueableWorkItemTestChild* pTestChild =
-                new DynamicQueueableWorkItemTestChild(
-                    [pVec, pThread, numWorkItemSoFar, maxWorkItems]() -> void
-                    {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-                        CreateChain(pVec, pThread, numWorkItemSoFar + 1, maxWorkItems);
-                    }
-                );
-            pVec->push_back(pTestChild);
-            EXPECT_EQ(Types::Result_t::SUCCESS, pThread->Queue(pTestChild));
-        }
-    }
-
     TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Interleaved)
     {
         int numWorkItems = 15;
@@ -92,7 +74,7 @@ namespace Tests
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
-        CreateChain(&testVector, &wThread, 0, numWorkItems);
+        CreateChain(&testVector, &wThread, 5, 0, numWorkItems);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
         wThread.Join();
