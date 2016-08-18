@@ -6,7 +6,7 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
-#include <vector>
+#include <queue>
 
 // C++ PROJECT INCLUDES
 #include "Async/QueueableObject.h"
@@ -45,8 +45,8 @@ namespace Async
 
     private:
 
-        std::vector<WorkObject*>                _onSuccess;
-        std::vector<WorkObject*>                _onFailure;
+        std::queue<WorkObject*>                _onSuccess;
+        std::queue<WorkObject*>                _onFailure;
         Detail::Semaphore                       _sem;
         IValueHolder*                           _pHolder;
         bool                                    _done[2];
