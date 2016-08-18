@@ -6,10 +6,9 @@
 #include <gtest/gtest.h>
 
 // C++ PROJECTS INCLUDES
-#include "Async/Result.h"
 #include "Async/WorkerThread.h"
-#include "QueueableWorkItemTestChild.h"
-#include "DynamicQueueableWorkItemTestChild.h"
+#include "QueueableObjectTestChild.h"
+#include "DynamicQueueableObjectTestChild.h"
 #include "GarbageCollector_noDealloc.h"
 #include "UnitTest_Utils.h"
 
@@ -18,15 +17,15 @@ namespace Async
 namespace Tests
 {
 
-    TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Solo)
+    TEST(Async_QueueableObject_WorkerThread_unit, Test_Queue_And_Execution_Solo)
     {
-        QueueableWorkItemTestChild test;
+        QueueableObjectTestChild test;
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
         // queue work item
         EXPECT_FALSE(test.GetVal());
-        EXPECT_EQ(Types::Result_t::SUCCESS, wThread.Queue(&test));
+        EXPECT_TRUE(wThread.Queue(&test));
 
         // cleanup
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -35,16 +34,16 @@ namespace Tests
         testCollector.Join();
     }
 
-    TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Sequential)
+    TEST(Async_QueueableObject_WorkerThread_unit, Test_Queue_And_Execution_Sequential)
     {
         int numWorkItems = 15;
-        std::vector<QueueableWorkItemTestChild*> testVector;
+        std::vector<QueueableObjectTestChild*> testVector;
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
         for(int i = 0; i < numWorkItems; ++i)
         {
-            QueueableWorkItemTestChild* pChild = new QueueableWorkItemTestChild();
+            QueueableObjectTestChild* pChild = new QueueableObjectTestChild();
             EXPECT_FALSE(pChild->GetVal());
             testVector.push_back(pChild);
         }
@@ -52,7 +51,7 @@ namespace Tests
         // add all the children to the WorkerThread
         for(int i = 0; i < numWorkItems; ++i)
         {
-            EXPECT_EQ(Types::Result_t::SUCCESS, wThread.Queue(testVector[i]));
+            EXPECT_TRUE(wThread.Queue(testVector[i]));
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(15));
         wThread.Join();
@@ -60,17 +59,17 @@ namespace Tests
         for(int i = 0; i < numWorkItems; ++i)
         {
             EXPECT_TRUE(testVector[i]->GetVal());
-            EXPECT_EQ(0, testVector[i]->GetRefCount());
+            EXPECT_EQ(0, testVector[i]->GetChildRefCount());
             delete testVector[i];
         }
         testCollector.Join();
         testVector.clear();
     }
 
-    TEST(Async_QueueableWorkItem_WorkerThread_unit, Test_Queue_And_Execution_Interleaved)
+    TEST(Async_QueueableObject_WorkerThread_unit, Test_Queue_And_Execution_Interleaved)
     {
         int numWorkItems = 15;
-        std::vector<DynamicQueueableWorkItemTestChild*> testVector;
+        std::vector<DynamicQueueableObjectTestChild*> testVector;
         GarbageCollector_noDealloc testCollector;
         Concurrency::WorkerThread wThread(&testCollector);
 
@@ -82,7 +81,7 @@ namespace Tests
         for(int i = 0; i < testVector.size(); ++i)
         {
             EXPECT_TRUE(testVector[i]->GetVal());
-            EXPECT_EQ(0, testVector[i]->GetRefCount());
+            EXPECT_EQ(0, testVector[i]->GetChildRefCount());
             delete testVector[i];
         }
         testCollector.Join();

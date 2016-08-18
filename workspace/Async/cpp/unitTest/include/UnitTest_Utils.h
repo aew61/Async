@@ -7,7 +7,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/WorkerThread.h"
-#include "DynamicQueueableWorkItemTestChild.h"
+#include "DynamicQueueableObjectTestChild.h"
 #include "SharedMemory.h"
 
 
@@ -16,7 +16,7 @@ namespace Async
 namespace Tests
 {
 
-    void CreateChain(std::vector<DynamicQueueableWorkItemTestChild*>* pVec,
+    void CreateChain(std::vector<DynamicQueueableObjectTestChild*>* pVec,
                      Concurrency::WorkerThread* pThread,
                      int blockingTime, int numWorkItemSoFar, int maxWorkItems);
 

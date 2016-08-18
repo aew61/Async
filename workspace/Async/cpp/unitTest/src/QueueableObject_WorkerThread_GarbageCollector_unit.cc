@@ -8,7 +8,7 @@
 // C++ PROJECT INCLUDES
 #include "Async/WorkerThread.h"
 #include "Async/GarbageCollector.h"
-#include "DynamicQueueableWorkItemTestChild.h"
+#include "DynamicQueueableObjectTestChild.h"
 #include "SharedMemory.h"
 #include "UnitTest_Utils.h"
 
@@ -17,13 +17,13 @@ namespace Async
 namespace Tests
 {
 
-    TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Solo)
+    TEST(Async_QueueableObject_GarbageCollector_unit, Test_Object_Life_Cycle_Solo)
     {
         int var = 0;
-        DynamicQueueableWorkItemTestChild* pChild =
-            new DynamicQueueableWorkItemTestChild([&var, &pChild]() -> void
+        DynamicQueueableObjectTestChild* pChild =
+            new DynamicQueueableObjectTestChild([&var, &pChild]() -> void
             {
-                EXPECT_EQ(1, pChild->GetRefCount());
+                EXPECT_EQ(1, pChild->GetChildRefCount());
                 ++var;
             });
         GarbageCollector gc;
@@ -36,21 +36,21 @@ namespace Tests
         EXPECT_EQ(1, var);
     }
 
-    TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Multiple_Linear_No_Block)
+    TEST(Async_QueueableObject_GarbageCollector_unit, Test_Object_Life_Cycle_Multiple_Linear_No_Block)
     {
         int var = 0;
         int numWorkItems = 15;
-        std::vector<DynamicQueueableWorkItemTestChild*> testVector;
+        std::vector<DynamicQueueableObjectTestChild*> testVector;
         GarbageCollector gc;
         Concurrency::WorkerThread wc(&gc);
 
         for(int i = 0; i < numWorkItems; ++i)
         {
-            testVector.push_back(new DynamicQueueableWorkItemTestChild([&var]() -> void
+            testVector.push_back(new DynamicQueueableObjectTestChild([&var]() -> void
             {
                 ++var;
             }));
-            EXPECT_EQ(Types::Result_t::SUCCESS, wc.Queue(testVector[i]));
+            EXPECT_TRUE(wc.Queue(testVector[i]));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -59,22 +59,22 @@ namespace Tests
         EXPECT_EQ(15, var);
     }
 
-    TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Multiple_Linear_Block)
+    TEST(Async_QueueableObject_GarbageCollector_unit, Test_Object_Life_Cycle_Multiple_Linear_Block)
     {
         int var = 0;
         int numWorkItems = 15;
-        std::vector<DynamicQueueableWorkItemTestChild*> testVector;
+        std::vector<DynamicQueueableObjectTestChild*> testVector;
         GarbageCollector gc;
         Concurrency::WorkerThread wc(&gc);
 
         for(int i = 0; i < numWorkItems; ++i)
         {
-            testVector.push_back(new DynamicQueueableWorkItemTestChild([&var]() -> void
+            testVector.push_back(new DynamicQueueableObjectTestChild([&var]() -> void
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 ++var;
             }));
-            EXPECT_EQ(Types::Result_t::SUCCESS, wc.Queue(testVector[i]));
+            EXPECT_TRUE(wc.Queue(testVector[i]));
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100 * 17));
@@ -83,10 +83,10 @@ namespace Tests
         EXPECT_EQ(15, var);
     }
 
-    TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Multiple_Interleaved_Block)
+    TEST(Async_QueueableObject_GarbageCollector_unit, Test_Object_Life_Cycle_Multiple_Interleaved_Block)
     {
         int numWorkItems = 15;
-        std::vector<DynamicQueueableWorkItemTestChild*> testVector;
+        std::vector<DynamicQueueableObjectTestChild*> testVector;
         GarbageCollector gc;
         Concurrency::WorkerThread wc(&gc);
 
@@ -98,7 +98,7 @@ namespace Tests
         gc.Join();
     }
 
-    TEST(Async_QueueableWorkItem_GarbageCollector_unit, Test_WorkItem_Life_Cycle_Multiple_MultiThreaded)
+    TEST(Async_QueueableObject_GarbageCollector_unit, Test_Object_Life_Cycle_Multiple_MultiThreaded)
     {
         int numThreads = 15;
         GarbageCollector gc;

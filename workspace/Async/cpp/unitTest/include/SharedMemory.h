@@ -9,7 +9,7 @@
 // C++ PROJECT INCLUDES
 #include "Async/WorkerThread.h"
 #include "Async/GarbageCollector.h"
-#include "DynamicQueueableWorkItemTestChild.h"
+#include "DynamicQueueableObjectTestChild.h"
 
 namespace Async
 {
@@ -22,7 +22,7 @@ namespace Tests
 
         ~SharedMemory();
 
-        std::vector<DynamicQueueableWorkItemTestChild*> _vec;
+        std::vector<DynamicQueueableObjectTestChild*>   _vec;
         std::mutex                                      _mutex;
         int                                             _count;
         Concurrency::WorkerThread*                      _pWT;

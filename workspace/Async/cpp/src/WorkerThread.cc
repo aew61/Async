@@ -35,7 +35,7 @@ namespace Concurrency
     }
 
     // Types::Result_t WorkerThread::Queue(IExecutableWorkItem* pWorkItem)
-    Types::Result_t WorkerThread::Queue(QueueableWorkItem* pWorkItem)
+    bool WorkerThread::Queue(QueueableObject* pWorkItem)
     {
         // modifying queue so need to aquire lock on it
         std::unique_lock<std::mutex> queueLock(this->_queueMutex);
@@ -45,7 +45,7 @@ namespace Concurrency
         this->_threadCV.notify_one();
         queueLock.unlock();
 
-        return Types::Result_t::SUCCESS;
+        return true;
     }
 
     void WorkerThread::Stop()
@@ -77,7 +77,7 @@ namespace Concurrency
         }
         this->_state = States::ConcurrencyState::DONE;
         // IExecutableWorkItem* pWorkItem = nullptr;
-        QueueableWorkItem* pWorkItem = nullptr;
+        QueueableObject* pWorkItem = nullptr;
         while(!this->_queue.empty())
         {
             pWorkItem = this->_queue.front();
@@ -98,7 +98,7 @@ namespace Concurrency
     {
         // the work item we will be executing
         // IExecutableWorkItem* pWorkItem = nullptr;
-        QueueableWorkItem* pWorkItem = nullptr;
+        QueueableObject* pWorkItem = nullptr;
 
         while (this->_run)
         {

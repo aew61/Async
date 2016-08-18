@@ -23,7 +23,7 @@ namespace Tests
         return th.get_id();
     }
 
-    void GarbageCollector_noDealloc::Queue(QueueableWorkItem* pWorkItem)
+    void GarbageCollector_noDealloc::Queue(QueueableObject* pWorkItem)
     {
     }
 

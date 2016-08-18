@@ -3,7 +3,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/WorkerThread.h"
-#include "Async/ConcurrencyStates.h"
+#include "Async/Enums/ConcurrencyStates.h"
 
 namespace Async
 {

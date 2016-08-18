@@ -35,33 +35,37 @@ get_filename_component( CONFIG_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../build/out/
 
 # Source files
 set( ASYNC_SRCS
-    ${SRC_ROOT}/Result.cc
-    ${SRC_ROOT}/WorkItemStates.cc
-    ${SRC_ROOT}/ConcurrencyStates.cc
-    ${SRC_ROOT}/WorkItem.cc
-    ${SRC_ROOT}/QueueableWorkItem.cc
+    ${SRC_ROOT}/Enums/ConcurrencyStates.cc
+    ${SRC_ROOT}/Detail/Semaphore.cc
+
+    ${SRC_ROOT}/QueueableObject.cc
     ${SRC_ROOT}/ExternalRefCount.cc
     ${SRC_ROOT}/WorkerThread.cc
     ${SRC_ROOT}/GarbageCollector.cc
+    ${SRC_ROOT}/WorkObject.cc
 )
 
 # Public header files (installed together with libraries)
 set( ASYNC_PUBLIC_HEADERS
     ${INC_ROOT}/Async/LibraryExport.h
-    ${INC_ROOT}/Async/Result.h
-    ${INC_ROOT}/Async/WorkItemStates.h
-    ${INC_ROOT}/Async/ConcurrencyStates.h
-    ${INC_ROOT}/Async/IExecutableWorkItem.h
-    ${INC_ROOT}/Async/QueueableWorkItem.h
-    ${INC_ROOT}/Async/IThread.h
-    ${INC_ROOT}/Async/IGarbageCollector.h
+    ${INC_ROOT}/Async/Enums/ConcurrencyStates.h
+
+    # ${INC_ROOT}/Async/Interfaces/IExecutableWorkItem.h
+    ${INC_ROOT}/Async/Interfaces/IRefCountedObject.h
+    ${INC_ROOT}/Async/QueueableObject.h
+    ${INC_ROOT}/Async/Interfaces/IThread.h
+    ${INC_ROOT}/Async/Interfaces/IGarbageCollector.h
+    ${INC_ROOT}/Async/Interfaces/IContinuableObject.h
+    ${INC_ROOT}/Async/Interfaces/IValueHolder.h
+
     ${INC_ROOT}/Async/ExternalRefCount.h
 )
 
 set( ASYNC_PRIVATE_HEADERS
-    ${INC_ROOT}/Async/WorkItem.h
+    ${INC_ROOT}/Async/Detail/Semaphore.h
     ${INC_ROOT}/Async/WorkerThread.h
     ${INC_ROOT}/Async/GarbageCollector.h
+    ${INC_ROOT}/Async/WorkObject.h
 )
 
 # setup visual studio source groups
@@ -118,36 +122,35 @@ if( RUN_UNIT_TESTS )
 
     # source files
     set( ASYNC_UNIT_SOURCES
-        ${SRC_ROOT}/Result.cc
-        ${SRC_ROOT}/WorkItemStates.cc
-        ${SRC_ROOT}/ConcurrencyStates.cc
-        ${SRC_ROOT}/WorkItem.cc
-        ${SRC_ROOT}/QueueableWorkItem.cc
+        ${SRC_ROOT}/Enums/ConcurrencyStates.cc
+        ${SRC_ROOT}/Detail/Semaphore.cc
+        ${SRC_ROOT}/QueueableObject.cc
         ${SRC_ROOT}/WorkerThread.cc
         ${SRC_ROOT}/GarbageCollector.cc
+        ${SRC_ROOT}/WorkObject.cc
 
-        ${TEST_SRC_ROOT}/WorkItemTestChild.cc
-        ${TEST_SRC_ROOT}/QueueableWorkItemTestChild.cc
-        ${TEST_SRC_ROOT}/DynamicQueueableWorkItemTestChild.cc
+        ${TEST_SRC_ROOT}/QueueableObjectTestChild.cc
+        ${TEST_SRC_ROOT}/DynamicQueueableObjectTestChild.cc
+        ${TEST_SRC_ROOT}/ValueHolderTestChild.cc
         ${TEST_SRC_ROOT}/GarbageCollector_noDealloc.cc
         ${TEST_SRC_ROOT}/SharedMemory.cc
         ${TEST_SRC_ROOT}/UnitTest_Utils.cc
 
-        ${TEST_SRC_ROOT}/Result_unit.cc
-        ${TEST_SRC_ROOT}/WorkItemStates_unit.cc
-        ${TEST_SRC_ROOT}/WorkItem_unit.cc
         ${TEST_SRC_ROOT}/WorkerThread_Solo_unit.cc
         ${TEST_SRC_ROOT}/GarbageCollector_Solo_unit.cc
-        ${TEST_SRC_ROOT}/QueueableWorkItem_Solo_unit.cc
-        ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_unit.cc
-        ${TEST_SRC_ROOT}/QueueableWorkItem_WorkerThread_GarbageCollector_unit.cc
+        ${TEST_SRC_ROOT}/QueueableObject_Solo_unit.cc
+        ${TEST_SRC_ROOT}/QueueableObject_WorkerThread_unit.cc
+        ${TEST_SRC_ROOT}/QueueableObject_WorkerThread_GarbageCollector_unit.cc
+        ${TEST_SRC_ROOT}/ValueHolderTestChild_unit.cc
+        ${TEST_SRC_ROOT}/WorkObject_Solo_unit.cc
+        ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
 
     set( ASYNC_UNIT_HEADERS
-        ${TEST_INC_ROOT}/WorkItemTestChild.h
-        ${TEST_INC_ROOT}/QueueableWorkItemTestChild.h
-        ${TEST_INC_ROOT}/DynamicQueueableWorkItemTestChild.h
+        ${TEST_INC_ROOT}/QueueableObjectTestChild.h
+        ${TEST_INC_ROOT}/DynamicQueueableObjectTestChild.h
+        ${TEST_INC_ROOT}/ValueHolderTestChild.h
         ${TEST_INC_ROOT}/GarbageCollector_noDealloc.h
         ${TEST_INC_ROOT}/SharedMemory.h
         ${TEST_INC_ROOT}/UnitTest_Utils.h

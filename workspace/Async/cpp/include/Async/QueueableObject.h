@@ -1,12 +1,12 @@
 #pragma once
-#ifndef ASYNC_ABSTRACTREFCOUNTEDEXECUTABLEWORKITEM_H
-#define ASYNC_ABSTRACTREFCOUNTEDEXECUTABLEWORKITEM_H
+#ifndef ASYNC_QUEUEABLEOBJECT_H
+#define ASYNC_QUEUEABLEOBJECT_H
 
 // SYSTEM INCLUDES
 #include <mutex>
 
 // C++ PROJECT INCLUDES
-#include "Async/Result.h"
+#include "Async/Interfaces/IRefCountedObject.h"
 
 namespace Async
 {
@@ -18,28 +18,28 @@ namespace Concurrency
 
     class RefCounter;
 
-    class QueueableWorkItem
+    class QueueableObject : public IRefCountedObject
     {
         friend class Concurrency::WorkerThread;
         friend class RefCounter;
         friend class GarbageCollector;
     public:
 
-        QueueableWorkItem();
+        QueueableObject();
 
-        virtual Types::Result_t Queue(Concurrency::WorkerThread* pThread) = 0;
+        virtual bool Queue(Concurrency::WorkerThread* pThread) = 0;
 
     protected:
 
         virtual void Execute() = 0;
 
-        virtual ~QueueableWorkItem();
+        virtual ~QueueableObject();
 
-        int DecRef();
+        virtual int DecRef() final override;
 
-        int IncRef();
+        virtual int IncRef() final override;
 
-        const int GetRefCount();
+        virtual const int GetRefCount() final override;
 
     private:
 
@@ -55,4 +55,4 @@ namespace Concurrency
 
 } // end of namespace Async
 
-#endif // end of ASYNC_ABSTRACTREFCOUNTEDEXECUTABLEWORKITEM_H
+#endif // end of ASYNC_QUEUEABLEOBJECT_H

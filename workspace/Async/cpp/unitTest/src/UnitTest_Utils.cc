@@ -12,14 +12,14 @@ namespace Async
 namespace Tests
 {
 
-    void CreateChain(std::vector<DynamicQueueableWorkItemTestChild*>* pVec,
+    void CreateChain(std::vector<DynamicQueueableObjectTestChild*>* pVec,
                      Concurrency::WorkerThread* pThread,
                      int blockingTime, int numWorkItemSoFar, int maxWorkItems)
     {
         if(numWorkItemSoFar < maxWorkItems)
         {
-            DynamicQueueableWorkItemTestChild* pTestChild =
-                new DynamicQueueableWorkItemTestChild(
+            DynamicQueueableObjectTestChild* pTestChild =
+                new DynamicQueueableObjectTestChild(
                     [pVec, pThread, blockingTime, numWorkItemSoFar, maxWorkItems]() -> void
                     {
                         std::this_thread::sleep_for(std::chrono::milliseconds(blockingTime));
@@ -27,7 +27,7 @@ namespace Tests
                     }
                 );
             pVec->push_back(pTestChild);
-            EXPECT_EQ(Types::Result_t::SUCCESS, pThread->Queue(pTestChild));
+            EXPECT_TRUE(pThread->Queue(pTestChild));
         }
     }
 
@@ -35,8 +35,8 @@ namespace Tests
     {
         std::lock_guard<std::mutex> lock(pShared->_mutex);
         int* pInt = &pShared->_count;
-        DynamicQueueableWorkItemTestChild* pChild =
-            new DynamicQueueableWorkItemTestChild([pInt]() -> void
+        DynamicQueueableObjectTestChild* pChild =
+            new DynamicQueueableObjectTestChild([pInt]() -> void
             {
                 *pInt = *pInt + 1;
             });

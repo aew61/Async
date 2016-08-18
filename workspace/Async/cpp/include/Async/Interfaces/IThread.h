@@ -7,10 +7,10 @@
 
 // C++ PROJECT INCLUDES
 // #include "Async/LibraryExport.h"
-#include "Async/Result.h"
-#include "Async/ConcurrencyStates.h"
+//#include "Async/Enums/Result.h"
+#include "Async/Enums/ConcurrencyStates.h"
 // #include "Async/IExecutableWorkItem.h"
-#include "Async/QueueableWorkItem.h"
+#include "Async/QueueableObject.h"
 
 namespace Async
 {
@@ -28,7 +28,7 @@ namespace Concurrency
         virtual States::ConcurrencyState GetState() = 0;
 
         // virtual Types::Result_t Queue(IExecutableWorkItem* pWorkItem) = 0;
-        virtual Types::Result_t Queue(QueueableWorkItem* pWorkItem) = 0;
+        virtual bool Queue(QueueableObject* pWorkItem) = 0;
 
         virtual void Stop() = 0;
 
