@@ -144,6 +144,7 @@ if( RUN_UNIT_TESTS )
         ${TEST_SRC_ROOT}/ValueHolderTestChild_unit.cc
         ${TEST_SRC_ROOT}/WorkObject_Solo_unit.cc
         ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_unit.cc
+        ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_GarbageCollector_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
 
