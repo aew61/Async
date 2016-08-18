@@ -2,17 +2,17 @@
 
 
 // C++ PROJECT INCLUDES
-#include "Async/QueueableWorkItem.h"
+#include "Async/QueueableObject.h"
 
 namespace Async
 {
 
-    QueueableWorkItem::QueueableWorkItem() :
+    QueueableObject::QueueableObject() :
         _refCountMutex(), _refCount(1)
     {
     }
 
-    QueueableWorkItem::~QueueableWorkItem()
+    QueueableObject::~QueueableObject()
     {
     }
 
@@ -33,19 +33,19 @@ namespace Async
 	}
     */
 
-    int QueueableWorkItem::DecRef()
+    int QueueableObject::DecRef()
     {
         std::lock_guard<std::mutex> refCountLock(this->_refCountMutex);
         return --this->_refCount;
     }
 
-    int QueueableWorkItem::IncRef()
+    int QueueableObject::IncRef()
     {
         std::lock_guard<std::mutex> refCountLock(this->_refCountMutex);
         return ++this->_refCount;
     }
 
-    const int QueueableWorkItem::GetRefCount()
+    const int QueueableObject::GetRefCount()
     {
         std::lock_guard<std::mutex> refCountLock(this->_refCountMutex);
         return this->_refCount;

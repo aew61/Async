@@ -6,7 +6,7 @@
 
 
 // C++ PROJECT INCLUDES
-#include "Async/IGarbageCollector.h"
+#include "Async/Interfaces/IGarbageCollector.h"
 
 namespace Async
 {
@@ -23,7 +23,7 @@ namespace Tests
 
         virtual std::thread::id GetId() override;
 
-        virtual void Queue(QueueableWorkItem* pWorkItem) override;
+        virtual void Queue(QueueableObject* pWorkItem) override;
 
         virtual void Join() override;
 

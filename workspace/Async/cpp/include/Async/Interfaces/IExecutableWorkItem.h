@@ -8,8 +8,8 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/LibraryExport.h"
-#include "Async/Result.h"
-#include "Async/WorkItemStates.h"
+#include "Async/Enums/Result.h"
+#include "Async/Enums/WorkItemStates.h"
 
 namespace Async
 {

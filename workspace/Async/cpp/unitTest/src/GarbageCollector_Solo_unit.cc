@@ -6,7 +6,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/GarbageCollector.h"
-#include "QueueableWorkItemTestChild.h"
+#include "QueueableObjectTestChild.h"
 
 
 namespace Async
@@ -24,7 +24,7 @@ namespace Tests
 
     TEST(Async_GarbageCollector_unit, Test_Deletion)
     {
-        QueueableWorkItemTestChild* pTest = new QueueableWorkItemTestChild();
+        QueueableObjectTestChild* pTest = new QueueableObjectTestChild();
         GarbageCollector gc;
         gc.Queue(pTest);
 
@@ -35,12 +35,12 @@ namespace Tests
     TEST(Async_GarbageCollector_unit, Test_Multiple_Deletion)
     {
         int numChildren = 15;
-        std::vector<QueueableWorkItemTestChild*> testVector;
+        std::vector<QueueableObjectTestChild*> testVector;
         GarbageCollector gc;
 
         for(int i = 0; i < numChildren; ++i)
         {
-            testVector.push_back(new QueueableWorkItemTestChild());
+            testVector.push_back(new QueueableObjectTestChild());
         }
 
         for(int i = 0; i < numChildren; ++i)

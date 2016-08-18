@@ -7,7 +7,8 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/LibraryExport.h"
-#include "Async/QueueableWorkItem.h"
+#include "Async/Interfaces/IRefCountedObject.h"
+#include "Async/QueueableObject.h"
 
 namespace Async
 {
@@ -15,9 +16,9 @@ namespace Async
     {
     public:
 
-        static QueueableWorkItem* IncRef(QueueableWorkItem* pWorkItem);
+        static QueueableObject* IncRef(QueueableObject* pWorkItem);
 
-        static void DecRef(QueueableWorkItem* pWorkItem);
+        static void DecRef(QueueableObject* pWorkItem);
 
     private:
 
@@ -27,36 +28,28 @@ namespace Async
 
     };
 
-    template<typename T>
-    ASYNC_API T* COPY(T*& pWorkItem)
-    {
-        return dynamic_cast<T*>(dynamic_cast<QueueableWorkItem*>(RefCounter::IncRef(pWorkItem)));
-    }
+    ASYNC_API QueueableObject* COPY(IRefCountedObject* pObj);
 
-    template<typename T>
-    ASYNC_API void DECREF(T*& pWorkItem)
-    {
-        RefCounter::DecRef(dynamic_cast<QueueableWorkItem*>(pWorkItem));
-        pWorkItem = nullptr;
-    }
+    ASYNC_API void DECREF(IRefCountedObject*& pObj);
+
+    //template<typename T>
+    //ASYNC_API Promise<T>* COPY(Promise<T>*& pWorkItem)
+    //{
+    //    return dynamic_cast<Promise<T>*>(dynamic_cast<QueueableWorkItem*>(IncRef(pWorkItem)));
+    //}
+
+    //template<typename T>
+    //ASYNC_API void DECREF(Promise<T>*& pWorkItem)
+    //{
+    //    DecRef(dynamic_cast<QueueableWorkItem*>(pWorkItem));
+    //    pWorkItem = nullptr;
+    //}
 
     // typedef void (*DecRefPtr)(QueueableWorkItem*);
 
     // extern DecRefPtr DECREF;
 
     // template specializations
-    template<>
-    ASYNC_API QueueableWorkItem* COPY<QueueableWorkItem>(QueueableWorkItem*& pWorkItem)
-    {
-        return RefCounter::IncRef(pWorkItem);
-    }
-
-    template<>
-    ASYNC_API void DECREF<QueueableWorkItem>(QueueableWorkItem*& pWorkItem)
-    {
-        RefCounter::DecRef(pWorkItem);
-        pWorkItem = nullptr;
-    }
 
 }
 

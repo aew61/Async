@@ -27,7 +27,7 @@ namespace Async
     }
 
     // void GarbageCollector::Queue(IExecutableWorkItem* pWorkItem)
-    void GarbageCollector::Queue(QueueableWorkItem* pWorkItem)
+    void GarbageCollector::Queue(QueueableObject* pWorkItem)
     {
         // modifying queue so need to aquire lock on it
         std::unique_lock<std::mutex> queueLock(this->_queueMutex);
@@ -72,7 +72,7 @@ namespace Async
     {
         // the work item we will be executing
         // IExecutableWorkItem* pWorkItem = nullptr;
-        QueueableWorkItem* pWorkItem = nullptr;
+        QueueableObject* pWorkItem = nullptr;
 
         while (this->_run)
         {

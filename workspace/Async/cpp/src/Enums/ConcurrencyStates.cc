@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 // C++ PROJECT INCLUDES
-#include "Async/ConcurrencyStates.h"
+#include "Async/Enums/ConcurrencyStates.h"
 
 namespace Async
 {

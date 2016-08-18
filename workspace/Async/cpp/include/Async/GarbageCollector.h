@@ -10,7 +10,7 @@
 #include <mutex>
 
 // C++ PROJECT INCLUDES
-#include "Async/IGarbageCollector.h"
+#include "Async/Interfaces/IGarbageCollector.h"
 
 namespace Async
 {
@@ -27,7 +27,7 @@ namespace Async
         virtual std::thread::id GetId() override;
 
         // virtual void Queue(IExecutableWorkItem* pWorkItem) override;
-        virtual void Queue(QueueableWorkItem* pWorkItem) override;
+        virtual void Queue(QueueableObject* pWorkItem) override;
 
         virtual void Join() override;
 
@@ -44,7 +44,7 @@ namespace Async
         std::atomic<bool>                           _run;
         std::mutex                                  _queueMutex;
         // std::queue<IExecutableWorkItem*>            _queue;
-        std::queue<QueueableWorkItem*>   _queue;
+        std::queue<QueueableObject*>                _queue;
 
     };
 

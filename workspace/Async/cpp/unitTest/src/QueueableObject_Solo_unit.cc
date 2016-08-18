@@ -2,25 +2,25 @@
 #include "gtest/gtest.h"
 
 // C++ PROJECT INCLUDES
-#include "QueueableWorkItemTestChild.h"
+#include "QueueableObjectTestChild.h"
 
 namespace Async
 {
 namespace Tests
 {
 
-    TEST(Async_QueueableWorkItem_unit, Test_Child_Constructor)
+    TEST(Async_QueueableObject_unit, Test_Child_Constructor)
     {
-        QueueableWorkItemTestChild test;
+        QueueableObjectTestChild test;
 
         EXPECT_NE(nullptr, &test);
-        EXPECT_EQ(1, test.GetRefCount());
+        EXPECT_EQ(1, test.GetChildRefCount());
         EXPECT_FALSE(test.GetVal());
     }
 
-    TEST(Async_QueueableWorkItem_unit, Test_Child_Execute)
+    TEST(Async_QueueableObject_unit, Test_Child_Execute)
     {
-        QueueableWorkItemTestChild test;
+        QueueableObjectTestChild test;
 
         test.ExecuteInterface();
         EXPECT_TRUE(test.GetVal());
