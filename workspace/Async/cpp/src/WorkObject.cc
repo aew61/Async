@@ -4,6 +4,7 @@
 // C++ PROJECT INCLUDES
 #include "Async/WorkObject.h"
 #include "Async/WorkerThread.h"
+#include "Async/ExternalRefCount.h"
 
 namespace Async
 {
@@ -18,6 +19,32 @@ namespace Async
     {
         this->_pException = nullptr;
         delete this->_pHolder;
+
+        WorkObject* pSuccessor = nullptr;
+
+        // this case will occur if and only if continuations have not been queued when Async
+        // is stopped
+        while(!this->_onSuccess.empty())
+        {
+            pSuccessor = this->_onSuccess.front();
+            this->_onSuccess.pop();
+            // decrement pSuccessor
+            if(pSuccessor->DecRef() == 0)
+            {
+                // queue pSuccessor on garbage collector (using dll side utility function)
+            }
+        }
+
+        while(!this->_onFailure.empty())
+        {
+            pSuccessor = this->_onSuccess.front();
+            this->_onSuccess.pop();
+            // decrement pSuccessor
+            if(pSuccessor->DecRef() == 0)
+            {
+                // queue pSuccessor on garbage collector (using dll side utility function)
+            }
+        }
     }
 
     bool WorkObject::Queue(Concurrency::WorkerThread* pThread)
@@ -41,11 +68,11 @@ namespace Async
         std::lock_guard<std::mutex> lock(this->_doneMutex);
         if(onSuccess)
         {
-            this->_onSuccess.push_back(pChild);
+            this->_onSuccess.push(pChild);
         }
         else
         {
-            this->_onFailure.push_back(pChild);
+            this->_onFailure.push(pChild);
         }
     }
 
@@ -74,15 +101,24 @@ namespace Async
         {
             std::lock_guard<std::mutex> lock(this->_doneMutex);
             this->_done[1] = true;
-            std::vector<WorkObject*>& vec = this->_onSuccess;
+            std::queue<WorkObject*>& queue = this->_onSuccess;
             if(this->GetError())
             {
-                vec = this->_onFailure;
+                queue = this->_onFailure;
             }
 
-            for(WorkObject* successor : vec)
+            WorkObject* pSuccessor = nullptr;
+            while(!queue.empty())
             {
-                // queue successor (using a utility function)
+                pSuccessor = queue.front();
+                queue.pop();
+
+                // queue pSuccessor (use a dll side utility)
+                // do NOT call IncRef or DecRef, this instance
+                // is holding the RefCount that a WorkerThread will "inherit"
+                // when the WorkObject* is queued. If that does not happen (Async is stopped)
+                // BEFORE they can be queued, the destructor of this instance will do all
+                // DecRefs and schedule on the garbage collector if necessary.
             }
             this->_sem.SignalAll();
         }

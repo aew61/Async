@@ -105,12 +105,22 @@ namespace Async
         }
 
         // being told to shutdown
+        // we need this lock because a QueueableObject*
+        // subclass will queue all of its continuations for deletion
+        // upon deletion AND the continuations cannot be queued for execution.
+        // This situation will happen if Async is told to shut down before
+        // all continuations have been queued.
+        std::unique_lock<std::mutex> queueLock(this->_queueMutex);
         while(!this->_queue.empty())
         {
             pWorkItem = this->_queue.front();
             this->_queue.pop();
+            queueLock.unlock();
+
             delete pWorkItem;
             pWorkItem = nullptr;
+
+            queueLock.lock();
         }
     }
 
