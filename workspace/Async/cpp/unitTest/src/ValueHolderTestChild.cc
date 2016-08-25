@@ -27,6 +27,11 @@ namespace Tests
         return true;
     }
 
+    void ValueHolderTestChild::Destroy()
+    {
+        delete this;
+    }
+
     void ValueHolderTestChild::AttachFunc(std::function<bool()> pFunc)
     {
         if(!this->_pFunc)

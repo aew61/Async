@@ -18,7 +18,7 @@ namespace Async
 
         virtual ~IContinuableObject() = default;
 
-        virtual void AddContinuation(WorkObject* pChild,
+        virtual bool AddContinuation(WorkObject* pChild,
                                      bool onSuccess=true) = 0;
 
     };

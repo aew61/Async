@@ -19,6 +19,8 @@ namespace Async
 
         virtual bool Call() = 0;
 
+        virtual void Destroy() = 0;
+
     };
 
 } // end of namespace Async
