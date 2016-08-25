@@ -10,15 +10,18 @@ namespace Async
 {
 
     WorkObject::WorkObject() : _onSuccess(),
-        _onFailure(), _sem(0), _pHolder(nullptr),
-        _done{false, false}, _pException(nullptr), _doneMutex()
+        _onFailure(), _cv(), _pHolder(nullptr), _queued(false),
+        _done(false), _pException(nullptr), _continuationMutex(), _cvMutex()
     {
     }
 
     WorkObject::~WorkObject()
     {
         this->_pException = nullptr;
-        delete this->_pHolder;
+        if(this->_pHolder)
+        {
+            this->_pHolder->Destroy();
+        }
 
         WorkObject* pSuccessor = nullptr;
 
@@ -50,12 +53,13 @@ namespace Async
     bool WorkObject::Queue(Concurrency::WorkerThread* pThread)
     {
 
-        if(this->_done[0])
+        if(this->_queued)
         {
             return false;
         }
 
-        return pThread->Queue(this);
+        this->_queued = pThread->Queue(this);
+        return this->_queued;
     }
 
     void WorkObject::Load(IValueHolder* pHolder)
@@ -63,22 +67,32 @@ namespace Async
         this->_pHolder = pHolder;
     }
 
-    void WorkObject::AddContinuation(WorkObject* pChild, bool onSuccess)
+    bool WorkObject::AddContinuation(WorkObject* pChild, bool onSuccess)
     {
-        std::lock_guard<std::mutex> lock(this->_doneMutex);
-        if(onSuccess)
+        //std::lock_guard<std::mutex> lock(this->_doneMutex);
+        if(!this->_done)
         {
-            this->_onSuccess.push(pChild);
+            std::lock_guard<std::mutex> lock(this->_continuationMutex);
+            if(onSuccess)
+            {
+                this->_onSuccess.push(pChild);
+            }
+            else
+            {
+                this->_onFailure.push(pChild);
+            }
+            return true;
         }
-        else
-        {
-            this->_onFailure.push(pChild);
-        }
+        return false;
     }
 
     void WorkObject::WaitForExecution()
     {
-        this->_sem.Wait();
+        std::unique_lock<std::mutex> lock(this->_cvMutex);
+        while(!this->_done)
+        {
+            this->_cv.wait(lock);
+        }
     }
 
     std::exception_ptr WorkObject::GetError() const
@@ -90,17 +104,20 @@ namespace Async
     {
         try
         {
-            this->_done[0] = this->_pHolder->Call();
+            this->_done = this->_pHolder->Call();
         }
         catch(...)
         {
             this->_pException = std::current_exception();
         }
 
-        if(this->_done[0])
+        if(this->_done)
         {
-            std::lock_guard<std::mutex> lock(this->_doneMutex);
-            this->_done[1] = true;
+            std::unique_lock<std::mutex> cvLock(this->_cvMutex);
+            this->_cv.notify_all();
+            cvLock.unlock();
+
+            std::lock_guard<std::mutex> lock(this->_continuationMutex);
             std::queue<WorkObject*>& queue = this->_onSuccess;
             if(this->GetError())
             {
@@ -120,14 +137,12 @@ namespace Async
                 // BEFORE they can be queued, the destructor of this instance will do all
                 // DecRefs and schedule on the garbage collector if necessary.
             }
-            this->_sem.SignalAll();
         }
     }
 
     bool WorkObject::IsDone()
     {
-        std::lock_guard<std::mutex> lock(this->_doneMutex);
-        return this->_done[1];
+        return this->_done;
     }
 
 } // end of namespace Async

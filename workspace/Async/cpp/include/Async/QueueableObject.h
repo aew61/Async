@@ -7,6 +7,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/Interfaces/IRefCountedObject.h"
+#include "Async/Detail/Semaphore.h"
 
 namespace Async
 {

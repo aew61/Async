@@ -36,6 +36,8 @@ namespace Concurrency
 
         virtual void Run() = 0;
 
+        virtual int NumWaitingJobs() = 0;
+
     };
 
 } // end of namespace Concurrency

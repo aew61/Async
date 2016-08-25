@@ -39,6 +39,8 @@ namespace Concurrency
 
         virtual void Run() override;
 
+        virtual int NumWaitingJobs() override;
+
     private:
 
         bool IsQueueEmpty();

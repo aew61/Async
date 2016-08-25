@@ -71,10 +71,10 @@ namespace Concurrency
         // waiting for _queueMutex to be unlocked but this thread possesses
         // a lock on _queueMutex which will never be released)!
         queueLock.unlock();
-        if (this->_thread.joinable())
-        {
-            this->_thread.join();
-        }
+        //if (this->_thread.joinable())
+        //{
+        this->_thread.join();
+        //}
         this->_state = States::ConcurrencyState::DONE;
         // IExecutableWorkItem* pWorkItem = nullptr;
         QueueableObject* pWorkItem = nullptr;
@@ -153,6 +153,12 @@ namespace Concurrency
     {
         std::lock_guard<std::mutex> queueLock(this->_queueMutex);
         return this->_queue.empty();
+    }
+
+    int WorkerThread::NumWaitingJobs()
+    {
+        std::lock_guard<std::mutex> queueLock(this->_queueMutex);
+        return this->_queue.size();
     }
 
 } // end of namespace Concurrency

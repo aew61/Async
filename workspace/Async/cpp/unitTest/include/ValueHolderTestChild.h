@@ -24,6 +24,8 @@ namespace Tests
 
         virtual bool Call() override;
 
+        virtual void Destroy() override;
+
         void AttachFunc(std::function<bool()> pFunc);
 
     private:

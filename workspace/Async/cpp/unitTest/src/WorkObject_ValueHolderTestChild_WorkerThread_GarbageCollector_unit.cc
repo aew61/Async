@@ -31,7 +31,13 @@ namespace Tests
         Concurrency::WorkerThread wt(&gc);
 
         EXPECT_TRUE(w->Queue(&wt));
-        w->WaitForExecution();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        // CANNOT use WITHOUT CALLING INCREF()
+        // If you do, the WorkObject may be garbage collected BEFORE
+        // the call to WaitForExecution() finishes blocking in which case
+        // the mutex is destroyed while it is busy!
+        //w->WaitForExecution();
         wt.Join();
         gc.Join();
     }
@@ -52,7 +58,13 @@ namespace Tests
         Concurrency::WorkerThread wt(&gc);
 
         EXPECT_TRUE(w->Queue(&wt));
-        w->WaitForExecution();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        // CANNOT use WITHOUT CALLING INCREF()
+        // If you do, the WorkObject may be garbage collected BEFORE
+        // the call to WaitForExecution() finishes blocking in which case
+        // the mutex is destroyed while it is busy!
+        //w->WaitForExecution();
         EXPECT_EQ(x, 10);
         wt.Join();
         gc.Join();

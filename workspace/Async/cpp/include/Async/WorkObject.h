@@ -28,7 +28,7 @@ namespace Async
 
         virtual void Load(IValueHolder* pPromise) override;
 
-        void AddContinuation(WorkObject* pChild,
+        bool AddContinuation(WorkObject* pChild,
                              bool onSuccess=true) override;
 
         virtual void WaitForExecution() override;
@@ -45,13 +45,13 @@ namespace Async
 
     private:
 
-        std::queue<WorkObject*>                _onSuccess;
-        std::queue<WorkObject*>                _onFailure;
-        Detail::Semaphore                       _sem;
+        std::queue<WorkObject*>                 _onSuccess, _onFailure;
+        //Detail::Semaphore                       _sem;
+        std::condition_variable                 _cv;
         IValueHolder*                           _pHolder;
-        bool                                    _done[2];
+        std::atomic<bool>                       _queued, _done;
         std::exception_ptr                      _pException;
-        std::mutex                              _doneMutex;
+        std::mutex                              _continuationMutex, _cvMutex;
 
     };
 
