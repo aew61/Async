@@ -24,7 +24,7 @@ namespace Async
             this->_pHolder->Destroy();
         }
 
-        WorkObject* pSuccessor = nullptr;
+        QueueableObject* pSuccessor = nullptr;
 
         // this case will occur if and only if continuations have not been queued when Async
         // is stopped
@@ -37,7 +37,7 @@ namespace Async
             //{
                 // queue pSuccessor on garbage collector (using dll side utility function)
             //}
-            DECREF(reinterpret_cast<QueueableObject**>(&pSuccessor));
+            DECREF(&pSuccessor);
         }
 
         while(!this->_onFailure.empty())
@@ -49,7 +49,7 @@ namespace Async
             //{
                 // queue pSuccessor on garbage collector (using dll side utility function)
             //}
-            DECREF(reinterpret_cast<QueueableObject**>(&pSuccessor));
+            DECREF(&pSuccessor);
         }
     }
 

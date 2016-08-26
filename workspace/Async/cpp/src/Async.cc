@@ -103,9 +103,11 @@ namespace Async
                 if(_pEngine)
                 {
                     _pEngine->GarbageCollect(*pObj);
-                    return;
                 }
-                throw std::logic_error("Async was either: never started or stopped before all objects could be collected.");
+                else
+                {
+                    throw std::logic_error("Async was either: never started or stopped before all objects could be collected.");
+                }
             }
         }
         *pObj = nullptr;
