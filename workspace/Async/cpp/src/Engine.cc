@@ -46,12 +46,25 @@ namespace Async
         }
     }
 
-    int Engine::NumThreads()
+    const unsigned int Engine::NumThreads()
     {
         this->BeginReadOperation();
         int size = this->_workerThreads.size();
         this->EndReadOperation();
         return size;
+    }
+
+    const std::vector<std::thread::id> Engine::GetActiveThreads()
+    {
+        this->BeginReadOperation();
+        std::vector<std::thread::id> activeThreads(this->_workerThreads.size());
+        int index = 0;
+        for(auto it = this->_workerThreads.begin(); it != this->_workerThreads.end(); ++it)
+        {
+            activeThreads[index++] = it->first;
+        }
+        this->EndReadOperation();
+        return activeThreads;
     }
 
     // this is a write operation
@@ -127,7 +140,7 @@ namespace Async
         }
     }
 
-    bool Engine::Queue(WorkObject* pWorkItem, std::thread::id threadId)
+    bool Engine::Queue(QueueableObject* pWorkItem, std::thread::id threadId)
     {
         bool result = false;
         this->BeginReadOperation();
@@ -142,6 +155,11 @@ namespace Async
         // }
         this->EndReadOperation();
         return result;
+    }
+
+    void Engine::GarbageCollect(QueueableObject* pWorkItem)
+    {
+        this->_gc.Queue(pWorkItem);
     }
 
     int Engine::QuickSortPartition(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right)

@@ -44,6 +44,7 @@ set( ASYNC_SRCS
     ${SRC_ROOT}/GarbageCollector.cc
     ${SRC_ROOT}/WorkObject.cc
     ${SRC_ROOT}/Engine.cc
+    ${SRC_ROOT}/Async.cc
 )
 
 # Public header files (installed together with libraries)
@@ -59,7 +60,7 @@ set( ASYNC_PUBLIC_HEADERS
     ${INC_ROOT}/Async/Interfaces/IContinuableObject.h
     ${INC_ROOT}/Async/Interfaces/IValueHolder.h
 
-    ${INC_ROOT}/Async/ExternalRefCount.h
+    ${INC_ROOT}/Async/Async.h
 )
 
 set( ASYNC_PRIVATE_HEADERS
@@ -68,6 +69,7 @@ set( ASYNC_PRIVATE_HEADERS
     ${INC_ROOT}/Async/GarbageCollector.h
     ${INC_ROOT}/Async/WorkObject.h
     ${INC_ROOT}/Async/Engine.h
+    ${INC_ROOT}/Async/ExternalRefCount.h
 )
 
 # setup visual studio source groups
@@ -149,6 +151,7 @@ if( RUN_UNIT_TESTS )
         ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_unit.cc
         ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_GarbageCollector_unit.cc
         ${TEST_SRC_ROOT}/Engine_unit.cc
+        ${TEST_SRC_ROOT}/Async_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
 
