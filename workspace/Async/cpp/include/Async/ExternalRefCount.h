@@ -6,8 +6,6 @@
 
 
 // C++ PROJECT INCLUDES
-#include "Async/LibraryExport.h"
-#include "Async/Interfaces/IRefCountedObject.h"
 #include "Async/QueueableObject.h"
 
 namespace Async
@@ -18,7 +16,7 @@ namespace Async
 
         static QueueableObject* IncRef(QueueableObject* pWorkItem);
 
-        static void DecRef(QueueableObject* pWorkItem);
+        static int DecRef(QueueableObject* pWorkItem);
 
     private:
 
@@ -27,10 +25,6 @@ namespace Async
         ~RefCounter();
 
     };
-
-    ASYNC_API QueueableObject* COPY(IRefCountedObject* pObj);
-
-    ASYNC_API void DECREF(IRefCountedObject*& pObj);
 
     //template<typename T>
     //ASYNC_API Promise<T>* COPY(Promise<T>*& pWorkItem)

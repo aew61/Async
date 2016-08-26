@@ -5,6 +5,7 @@
 #include "Async/WorkObject.h"
 #include "Async/WorkerThread.h"
 #include "Async/ExternalRefCount.h"
+#include "Async/Async.h"
 
 namespace Async
 {
@@ -32,10 +33,11 @@ namespace Async
             pSuccessor = this->_onSuccess.front();
             this->_onSuccess.pop();
             // decrement pSuccessor
-            if(pSuccessor->DecRef() == 0)
-            {
+            //if(pSuccessor->DecRef() == 0)
+            //{
                 // queue pSuccessor on garbage collector (using dll side utility function)
-            }
+            //}
+            DECREF(reinterpret_cast<QueueableObject**>(&pSuccessor));
         }
 
         while(!this->_onFailure.empty())
@@ -43,10 +45,11 @@ namespace Async
             pSuccessor = this->_onSuccess.front();
             this->_onSuccess.pop();
             // decrement pSuccessor
-            if(pSuccessor->DecRef() == 0)
-            {
+            //if(pSuccessor->DecRef() == 0)
+            //{
                 // queue pSuccessor on garbage collector (using dll side utility function)
-            }
+            //}
+            DECREF(reinterpret_cast<QueueableObject**>(&pSuccessor));
         }
     }
 

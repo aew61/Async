@@ -16,15 +16,9 @@ namespace Async
         return pWorkItem;
     }
 
-    void RefCounter::DecRef(QueueableObject* pWorkItem)
+    int RefCounter::DecRef(QueueableObject* pWorkItem)
     {
-        if(pWorkItem)
-        {
-            if(pWorkItem->DecRef() == 0)
-            {
-                // delete object
-            }
-        }
+        return pWorkItem->DecRef();
     }
 
     RefCounter::RefCounter()
@@ -33,17 +27,6 @@ namespace Async
 
     RefCounter::~RefCounter()
     {
-    }
-
-    QueueableObject* COPY(IRefCountedObject* pObj)
-    {
-        return RefCounter::IncRef(dynamic_cast<QueueableObject*>(pObj));
-    }
-
-    void DECREF(IRefCountedObject*& pObj)
-    {
-        RefCounter::DecRef(dynamic_cast<QueueableObject*>(pObj));
-        pObj = nullptr;
     }
 
     // DecRefPtr DECREF = &RefCounter::DecRef;

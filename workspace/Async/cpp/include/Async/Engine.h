@@ -12,7 +12,7 @@
 // C++ PROJECT INCLUDES
 #include "Async/GarbageCollector.h"
 #include "Async/WorkerThread.h"
-#include "Async/WorkObject.h"
+#include "Async/QueueableObject.h"
 #include "Async/Detail/Semaphore.h"
 
 namespace Async
@@ -28,7 +28,9 @@ namespace Async
 
         void Shutdown();
 
-        int NumThreads();
+        const unsigned int NumThreads();
+
+        const std::vector<std::thread::id> GetActiveThreads();
 
         // this is a write operation
         const std::vector<std::thread::id> SpawnWorkerThreads(const unsigned int numThreads);
@@ -41,7 +43,9 @@ namespace Async
 
         void QuickSort(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right);
 
-        bool Queue(WorkObject* pWorkItem, std::thread::id threadId);
+        bool Queue(QueueableObject* pWorkItem, std::thread::id threadId);
+
+        void GarbageCollect(QueueableObject* pWorkItem);
 
     protected:
 
