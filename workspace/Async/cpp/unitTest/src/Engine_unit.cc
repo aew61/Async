@@ -78,10 +78,20 @@ namespace Tests
     {
         Engine e(3);
         EXPECT_EQ(3, e.NumThreads());
-        std::vector<std::thread::id> newThreads = e.SpawnWorkerThreads(2);
+        const std::vector<std::thread::id> newThreads = e.SpawnWorkerThreads(2);
         EXPECT_EQ(5, e.NumThreads());
         e.ShutdownWorkerThreads(newThreads);
         EXPECT_EQ(3, e.NumThreads());
+    }
+
+    TEST(Async_Engine_unit, Test_GetActiveThreads)
+    {
+        Engine e(3);
+        EXPECT_EQ(3, e.GetActiveThreads().size());
+        const std::vector<std::thread::id> newThreads = e.SpawnWorkerThreads(2);
+        EXPECT_EQ(5, e.GetActiveThreads().size());
+        e.ShutdownWorkerThreads(newThreads);
+        EXPECT_EQ(3, e.GetActiveThreads().size());
     }
 
     TEST(Async_Engine_unit, Test_Queue)
