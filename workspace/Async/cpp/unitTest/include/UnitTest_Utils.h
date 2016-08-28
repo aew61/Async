@@ -30,6 +30,8 @@ namespace Tests
                               std::vector<std::vector<std::pair<std::thread::id, int> > >* toRecord,
                               unsigned int numObjectsToSpawn);
 
+    void SpawnAsyncEngineSubmitter(std::function<bool()> pFunc, unsigned int numObjectsToSpawn);
+
 } // end of namespace Tests
 } // end of namespace Async
 

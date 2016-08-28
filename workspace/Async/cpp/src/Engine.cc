@@ -3,6 +3,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/Engine.h"
+#include "Async/Enums/ConcurrencyStates.h"
 
 namespace Async
 {
@@ -130,16 +131,6 @@ namespace Async
         return snapshot;
     }
 
-    void Engine::QuickSort(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right)
-    {
-        if(left < right)
-        {
-            int partition = this->QuickSortPartition(snapshotRef, left, right);
-            this->QuickSort(snapshotRef, left, partition);
-            this->QuickSort(snapshotRef, partition + 1, right);
-        }
-    }
-
     bool Engine::Queue(QueueableObject* pWorkItem, std::thread::id threadId)
     {
         bool result = false;
@@ -162,30 +153,19 @@ namespace Async
         this->_gc.Queue(pWorkItem);
     }
 
-    int Engine::QuickSortPartition(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right)
+    bool Engine::IsIdle()
     {
-        int lower = snapshotRef[left].second;
-        int upper = snapshotRef[right].second;
-        int middle = snapshotRef[(left + right) / 2].second;
-        if(middle < lower) { lower = middle; }
-        if(middle > upper) { upper = middle; }
-        int pivot = (middle + upper) / 2;
-        int i = left - 1;
-        int j = right + 1;
-        while(true)
+        this->BeginReadOperation();
+
+        bool isIdle = true;
+        for(auto it = this->_workerThreads.begin(); it != this->_workerThreads.end(); ++it)
         {
-            do { ++i; }
-            while(snapshotRef[i].second < pivot);
-
-            do { --j; }
-            while(snapshotRef[j].second > pivot);
-
-            if(i >= j)
-            {
-                return j;
-            }
-            std::swap(snapshotRef[i], snapshotRef[j]);
+            isIdle = isIdle && (it->second->GetState() == States::ConcurrencyState::IDLE)
+                && (it->second->NumWaitingJobs() == 0);
         }
+
+        this->EndReadOperation();
+        return isIdle;
     }
 
     void Engine::BeginReadOperation()

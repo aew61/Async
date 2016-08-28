@@ -5,7 +5,7 @@
 #include "Async/WorkObject.h"
 #include "Async/WorkerThread.h"
 #include "Async/ExternalRefCount.h"
-#include "Async/Async.h"
+#include "Async/AsyncEngineWrapper.h"
 
 namespace Async
 {

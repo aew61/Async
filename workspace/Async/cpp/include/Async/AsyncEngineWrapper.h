@@ -29,7 +29,11 @@ namespace Async
 
     ASYNC_API bool Queue(QueueableObject* pWorkObject, std::thread::id thread);
 
+    ASYNC_API bool IsIdle();
+
     ASYNC_API bool Stop();
+
+    ASYNC_API QueueableObject* MakeObject();
 
     ASYNC_API QueueableObject* COPY(QueueableObject* pObj);
 

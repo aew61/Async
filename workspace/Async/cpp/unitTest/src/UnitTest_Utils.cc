@@ -1,4 +1,5 @@
 // SYSTEM INCLUDES
+#include <algorithm>
 #include <chrono>
 #include <thread>
 #include <functional>
@@ -6,6 +7,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/WorkObject.h"
+#include "Async/AsyncEngineWrapper.h"
 #include "UnitTest_Utils.h"
 #include "ValueHolderTestChild.h"
 
@@ -52,6 +54,10 @@ namespace Tests
                               unsigned int numObjectsToSpawn)
     {
         unsigned int iter = 0;
+        auto pComp = [](std::pair<std::thread::id, int> left, std::pair<std::thread::id, int> right) -> bool
+        {
+            return left.second < right.second;
+        };
         do
         {
             WorkObject* pObject = new WorkObject();
@@ -62,13 +68,37 @@ namespace Tests
             std::vector<std::pair<std::thread::id, int> > snapshot = pEngine->GetThreadLoadSnapshot();
             EXPECT_EQ(snapshot.size(), pEngine->NumThreads());
             EXPECT_TRUE(snapshot.size() > 0);
-            pEngine->QuickSort(snapshot, 0, snapshot.size() - 1);
+            std::sort(snapshot.begin(), snapshot.end(), pComp);
 
             std::unique_lock<std::mutex> lock(*pRecordMutex);
             toRecord->push_back(snapshot);
             lock.unlock();
 
             EXPECT_TRUE(pEngine->Queue(pObject, snapshot[0].first));
+        }
+        while(++iter < numObjectsToSpawn);
+    }
+
+    void SpawnAsyncEngineSubmitter(std::function<bool()> pFunc, unsigned int numObjectsToSpawn)
+    {
+        unsigned int iter = 0;
+        auto pComp = [](std::pair<std::thread::id, int> left, std::pair<std::thread::id, int> right) -> bool
+        {
+            return left.second < right.second;
+        };
+        do
+        {
+            WorkObject* pObject = new WorkObject();
+            ValueHolderTestChild* pHolder = new ValueHolderTestChild();
+            pHolder->AttachFunc(pFunc);
+            pObject->Load(pHolder);
+
+            std::vector<std::pair<std::thread::id, int> > snapshot = GetThreadLoadSnapshot();
+            EXPECT_EQ(snapshot.size(), NumActiveThreads());
+            EXPECT_TRUE(snapshot.size() > 0);
+            std::sort(snapshot.begin(), snapshot.end(), pComp);
+
+            EXPECT_TRUE(Queue(pObject, snapshot[0].first));
         }
         while(++iter < numObjectsToSpawn);
     }

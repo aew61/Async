@@ -2,9 +2,10 @@
 #include <memory>
 
 // C++ PROJECT INCLUDES
-#include "Async/Async.h"
+#include "Async/AsyncEngineWrapper.h"
 #include "Async/Engine.h"
 #include "Async/ExternalRefCount.h"
+#include "Async/WorkObject.h"
 
 namespace Async
 {
@@ -77,6 +78,15 @@ namespace Async
         throw std::logic_error("Async is not started. Call Async::Start() first!");
     }
 
+    bool IsIdle()
+    {
+        if(_pEngine)
+        {
+            return _pEngine->IsIdle();
+        }
+        throw std::logic_error("Async is not started. Call Async::Start() first!");
+    }
+
     bool Stop()
     {
         if(_pEngine)
@@ -86,6 +96,15 @@ namespace Async
             return true;
         }
         return false;
+    }
+
+    QueueableObject* MakeObject()
+    {
+        if(_pEngine)
+        {
+            return new WorkObject();
+        }
+        return nullptr;
     }
 
     QueueableObject* COPY(QueueableObject* pObj)
