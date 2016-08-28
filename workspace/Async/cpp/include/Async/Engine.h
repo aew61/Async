@@ -41,15 +41,13 @@ namespace Async
         // this is a read operation
         std::vector<std::pair<std::thread::id, int> > GetThreadLoadSnapshot();
 
-        void QuickSort(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right);
-
         bool Queue(QueueableObject* pWorkItem, std::thread::id threadId);
 
         void GarbageCollect(QueueableObject* pWorkItem);
 
-    protected:
+        bool IsIdle();
 
-        int QuickSortPartition(std::vector<std::pair<std::thread::id, int> >& snapshotRef, int left, int right);
+    protected:
 
         void BeginReadOperation();
 

@@ -44,7 +44,7 @@ set( ASYNC_SRCS
     ${SRC_ROOT}/GarbageCollector.cc
     ${SRC_ROOT}/WorkObject.cc
     ${SRC_ROOT}/Engine.cc
-    ${SRC_ROOT}/Async.cc
+    ${SRC_ROOT}/AsyncEngineWrapper.cc
 )
 
 # Public header files (installed together with libraries)
@@ -60,7 +60,7 @@ set( ASYNC_PUBLIC_HEADERS
     ${INC_ROOT}/Async/Interfaces/IContinuableObject.h
     ${INC_ROOT}/Async/Interfaces/IValueHolder.h
 
-    ${INC_ROOT}/Async/Async.h
+    ${INC_ROOT}/Async/AsyncEngineWrapper.h
 )
 
 set( ASYNC_PRIVATE_HEADERS
@@ -151,7 +151,7 @@ if( RUN_UNIT_TESTS )
         ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_unit.cc
         ${TEST_SRC_ROOT}/WorkObject_ValueHolderTestChild_WorkerThread_GarbageCollector_unit.cc
         ${TEST_SRC_ROOT}/Engine_unit.cc
-        ${TEST_SRC_ROOT}/Async_unit.cc
+        ${TEST_SRC_ROOT}/AsyncEngineWrapper_unit.cc
         ${TEST_SRC_ROOT}/main.cc
     )
 
