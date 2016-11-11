@@ -91,12 +91,12 @@ namespace Tests
     {
         EXPECT_TRUE(Start(1));
 
-        QueueableObject* pObject = new WorkObject();
+        IRefCountedObject* pObject = new WorkObject();
         DECREF(&pObject);
         EXPECT_EQ(pObject, nullptr);
 
         pObject = new WorkObject();
-        QueueableObject* pObject2 = reinterpret_cast<WorkObject*>(COPY(pObject));
+        IRefCountedObject* pObject2 = reinterpret_cast<WorkObject*>(COPY(pObject));
         EXPECT_NE(pObject2, nullptr);
         DECREF(&pObject2);
         EXPECT_EQ(pObject2, nullptr);

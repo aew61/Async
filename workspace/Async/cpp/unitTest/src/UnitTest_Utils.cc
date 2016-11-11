@@ -88,7 +88,7 @@ namespace Tests
         };
         do
         {
-            WorkObject* pObject = new WorkObject();
+            IRefCountedObject* pObject = new WorkObject();
             ValueHolderTestChild* pHolder = new ValueHolderTestChild();
             pHolder->AttachFunc(pFunc);
             pObject->Load(pHolder);

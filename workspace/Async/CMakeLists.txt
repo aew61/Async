@@ -61,6 +61,7 @@ set( ASYNC_PUBLIC_HEADERS
     ${INC_ROOT}/Async/Interfaces/IValueHolder.h
 
     ${INC_ROOT}/Async/AsyncEngineWrapper.h
+    ${INC_ROOT}/Async/Call.h
 )
 
 set( ASYNC_PRIVATE_HEADERS

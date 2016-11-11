@@ -9,7 +9,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/LibraryExport.h"
-#include "Async/QueueableObject.h"
+#include "Async/Interfaces/IRefCountedObject.h"
 
 namespace Async
 {
@@ -27,17 +27,17 @@ namespace Async
 
     ASYNC_API const std::vector<std::thread::id> ActiveThreads();
 
-    ASYNC_API bool Queue(QueueableObject* pWorkObject, std::thread::id thread);
+    ASYNC_API bool Queue(IRefCountedObject* pWorkObject, std::thread::id thread);
 
     ASYNC_API bool IsIdle();
 
     ASYNC_API bool Stop();
 
-    ASYNC_API QueueableObject* MakeObject();
+    ASYNC_API IRefCountedObject* MakeObject();
 
-    ASYNC_API QueueableObject* COPY(QueueableObject* pObj);
+    ASYNC_API IRefCountedObject* COPY(IRefCountedObject* pObj);
 
-    ASYNC_API void DECREF(QueueableObject** pObj);
+    ASYNC_API void DECREF(IRefCountedObject** pObj);
 
 } // end of namespace Async
 
