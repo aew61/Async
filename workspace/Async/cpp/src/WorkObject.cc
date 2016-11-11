@@ -24,7 +24,7 @@ namespace Async
             this->_pHolder->Destroy();
         }
 
-        QueueableObject* pSuccessor = nullptr;
+        IRefCountedObject* pSuccessor = nullptr;
 
         // this case will occur if and only if continuations have not been queued when Async
         // is stopped

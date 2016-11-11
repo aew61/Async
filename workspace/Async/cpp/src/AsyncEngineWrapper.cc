@@ -3,6 +3,7 @@
 
 // C++ PROJECT INCLUDES
 #include "Async/AsyncEngineWrapper.h"
+#include "Async/QueueableObject.h"
 #include "Async/Engine.h"
 #include "Async/ExternalRefCount.h"
 #include "Async/WorkObject.h"
@@ -69,11 +70,11 @@ namespace Async
         throw std::logic_error("Async is not started. Call Async::Start() first!");
     }
 
-    bool Queue(QueueableObject* pWorkObject, std::thread::id thread)
+    bool Queue(IRefCountedObject* pWorkObject, std::thread::id thread)
     {
         if(_pEngine)
         {
-            return _pEngine->Queue(pWorkObject, thread);
+            return _pEngine->Queue(dynamic_cast<QueueableObject*>(pWorkObject), thread);
         }
         throw std::logic_error("Async is not started. Call Async::Start() first!");
     }
@@ -98,38 +99,42 @@ namespace Async
         return false;
     }
 
-    QueueableObject* MakeObject()
+    IRefCountedObject* MakeObject()
     {
         if(_pEngine)
         {
-            return new WorkObject();
+            return dynamic_cast<QueueableObject*>(new WorkObject());
         }
         return nullptr;
     }
 
-    QueueableObject* COPY(QueueableObject* pObj)
+    IRefCountedObject* COPY(IRefCountedObject* pObj)
     {
-        return RefCounter::IncRef(pObj);
+        return dynamic_cast<IRefCountedObject*>(RefCounter::IncRef(dynamic_cast<QueueableObject*>(pObj)));
     }
 
-    void DECREF(QueueableObject** pObj)
+    void DECREF(IRefCountedObject** pObj)
     {
-        if(*pObj)
+        if(pObj)
         {
-            if(RefCounter::DecRef(*pObj) == 0)
+            QueueableObject* pObjDest = dynamic_cast<QueueableObject*>(*pObj);
+            if(*pObj)
             {
-                // delete pWorkObject
-                if(_pEngine)
+                if(RefCounter::DecRef(pObjDest) == 0)
                 {
-                    _pEngine->GarbageCollect(*pObj);
-                }
-                else
-                {
-                    throw std::logic_error("Async was either: never started or stopped before all objects could be collected.");
+                    // delete pWorkObject
+                    if(_pEngine)
+                    {
+                        _pEngine->GarbageCollect(pObjDest);
+                    }
+                    else
+                    {
+                        throw std::logic_error("Async was either: never started or stopped before all objects could be collected.");
+                    }
                 }
             }
+            *pObj = nullptr;
         }
-        *pObj = nullptr;
     }
 
 } // end of namespace Async
